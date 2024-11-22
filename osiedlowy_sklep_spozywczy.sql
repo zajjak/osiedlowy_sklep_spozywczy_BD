@@ -1,8 +1,8 @@
 DROP DATABASE IF EXISTS osiedlowy_sklep_spozywczy;
 
 CREATE DATABASE osiedlowy_sklep_spozywczy
-  CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 USE osiedlowy_sklep_spozywczy;
 
@@ -130,3 +130,16 @@ ALTER TABLE `stanproduktów` ADD CONSTRAINT `fk_stanProduktów_magazyn_1` FOREIG
 ALTER TABLE `tranzakcja` ADD CONSTRAINT `fk_tranzakcja_pracowincy_1` FOREIGN KEY (`id_pracownik`) REFERENCES `pracownik` (`id_pracownik`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `tranzakcja` ADD CONSTRAINT `fk_tranzakcja_dziennyUtarg_1` FOREIGN KEY (`id_dziennyutarg`) REFERENCES `dziennyutarg` (`id_dziennyutarg`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `wielosztuki` ADD CONSTRAINT `fk_wielosztuki_ceny_1` FOREIGN KEY (`id_ceny`) REFERENCES `ceny` (`id_ceny`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Stowrzenie widoku
+CREATE VIEW infopracownik AS
+SELECT 
+    p.imie,
+    p.nazwisko,
+    p.pesel,
+    s.pozycja,
+    w.wynagrodzenieNetto,
+    w.wynagrodzenieBrutto
+FROM pracownik p
+JOIN stanowisko s ON p.id_pracownik = s.id_pracownik
+JOIN wynagrodzenie w ON s.id_wynagrodzenia = w.id_wynagrodzenie;
