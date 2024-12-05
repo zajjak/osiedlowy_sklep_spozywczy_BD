@@ -131,7 +131,7 @@ ALTER TABLE `tranzakcja` ADD CONSTRAINT `fk_tranzakcja_pracowincy_1` FOREIGN KEY
 ALTER TABLE `tranzakcja` ADD CONSTRAINT `fk_tranzakcja_dziennyUtarg_1` FOREIGN KEY (`id_dziennyutarg`) REFERENCES `dziennyutarg` (`id_dziennyutarg`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `wielosztuki` ADD CONSTRAINT `fk_wielosztuki_ceny_1` FOREIGN KEY (`id_ceny`) REFERENCES `ceny` (`id_ceny`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
--- Stowrzenie widoku
+-- Stowrzenie widoków
 CREATE VIEW infopracownik AS
 SELECT 
     p.imie,
@@ -143,3 +143,17 @@ SELECT
 FROM pracownik p
 JOIN stanowisko s ON p.id_pracownik = s.id_pracownik
 JOIN wynagrodzenie w ON s.id_wynagrodzenia = w.id_wynagrodzenie;
+
+
+CREATE VIEW infoproduktmagazyn AS
+SELECT 
+    dp.nazwa AS nazwa_produktu,
+    k.nazwaKategorii AS kategoria,
+    c.cenaBrutto AS cena_brutto,
+    sp.ilosc AS ilosc_w_magazynie,
+    m.nazwa AS nazwa_magazynu
+FROM stanproduktów sp
+JOIN daneproduktów dp ON sp.id_daneproduktow = dp.id_daneproduktow
+JOIN kategoria k ON dp.id_kategoria = k.id_kategoria
+JOIN ceny c ON dp.id_ceny = c.id_ceny
+JOIN magazyn m ON sp.id_magazyn = m.id_magazyn;
