@@ -1,0 +1,12 @@
+Atrybut logi hasło do pracownik
+Historia logowania
+Text -> Varchar optymalizacja
+Int -> float wypłata
+Wynagrodzenie do pracownika
+Dodać pracownik_stanowisko
+Trazakcja -> nie intiger
+Id dziennyutarg
+Ilość np kgramt
+Historia cen
+Producent dodaj
+Cena 1 do jeden
