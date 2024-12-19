@@ -1,159 +1,142 @@
 DROP DATABASE IF EXISTS osiedlowy_sklep_spozywczy;
 
-CREATE DATABASE osiedlowy_sklep_spozywczy
-CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+CREATE DATABASE osiedlowy_sklep_spozywczy;
 
 USE osiedlowy_sklep_spozywczy;
 
-CREATE TABLE `ceny`  (
-  `id_ceny` int NOT NULL AUTO_INCREMENT,
-  `cenaBrutto` float NULL DEFAULT NULL,
-  `cenaNetto` float NULL DEFAULT NULL,
-  PRIMARY KEY (`id_ceny`)
+CREATE TABLE `ceny` (
+  `id_ceny` INT NOT NULL AUTO_INCREMENT,
+  `za_szt_za_kg` BIT(1) NOT NULL,
+  `cena_brutto` FLOAT NULL DEFAULT NULL,
+  `cena_netto` FLOAT NULL DEFAULT NULL,
+  PRIMARY KEY (`id_ceny`) USING BTREE
 );
 
-CREATE TABLE `daneproduktów`  (
-  `id_daneproduktow` int NOT NULL AUTO_INCREMENT,
-  `nazwa` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `VAT` float NOT NULL,
-  `id_kategoria` int NOT NULL,
-  `id_ceny` int NULL DEFAULT NULL,
-  PRIMARY KEY (`id_daneproduktow`)
+CREATE TABLE `ceny_historia` (
+  `id_historia_ceny` INT NOT NULL AUTO_INCREMENT,
+  `id_ceny` INT NOT NULL,
+  `data_zmiany` DATE NOT NULL,
+  `cena_brutto` FLOAT NOT NULL,
+  `cena_netto` FLOAT NOT NULL,
+  PRIMARY KEY (`id_historia_ceny`),
+  FOREIGN KEY (`id_ceny`) REFERENCES `ceny` (`id_ceny`)
 );
 
-CREATE TABLE `dziennyutarg`  (
-  `id_dziennyutarg` int NOT NULL AUTO_INCREMENT,
-  `data` date NULL DEFAULT NULL,
-  `kwotaŁączna` float NULL DEFAULT NULL,
-  PRIMARY KEY (`id_dziennyutarg`)
+CREATE TABLE `kategoria` (
+  `id_kategoria` INT NOT NULL AUTO_INCREMENT,
+  `nazwa_kategorii` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id_kategoria`) USING BTREE
 );
 
-CREATE TABLE `kategoria`  (
-  `id_kategoria` int NOT NULL AUTO_INCREMENT,
-  `nazwaKategorii` text NULL,
-  PRIMARY KEY (`id_kategoria`)
+CREATE TABLE `producent` (
+  `id_producent` INT NOT NULL AUTO_INCREMENT,
+  `nazwa` VARCHAR(255) NOT NULL,
+  `adres` VARCHAR(255) NOT NULL,
+  `kraj` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id_producent`)
 );
 
-CREATE TABLE `koszyk`  (
-  `id_koszyk` int NOT NULL AUTO_INCREMENT,
-  `id_przedmiotwkoszyku` int NOT NULL,
-  `id_tranzakcji` int NOT NULL,
-  PRIMARY KEY (`id_koszyk`)
+CREATE TABLE `dane_produktow` (
+  `id_dane_produktow` INT NOT NULL AUTO_INCREMENT,
+  `nazwa` VARCHAR(255) NOT NULL,
+  `vat` FLOAT NOT NULL,
+  `id_kategoria` INT NOT NULL,
+  `id_ceny` INT NOT NULL,
+  `id_producenta` INT NOT NULL,
+  PRIMARY KEY (`id_dane_produktow`) USING BTREE,
+  FOREIGN KEY (`id_kategoria`) REFERENCES `kategoria` (`id_kategoria`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  FOREIGN KEY (`id_ceny`) REFERENCES `ceny` (`id_ceny`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  FOREIGN KEY (`id_producenta`) REFERENCES `producent` (`id_producent`)
 );
 
-CREATE TABLE `magazyn`  (
-  `id_magazyn` int NOT NULL AUTO_INCREMENT,
-  `nazwa` text NOT NULL,
-  `pojemnosc` int NOT NULL,
-  `zapelnienie` int(10) UNSIGNED ZEROFILL NOT NULL,
-  PRIMARY KEY (`id_magazyn`)
+CREATE TABLE `magazyn` (
+  `id_magazyn` INT NOT NULL AUTO_INCREMENT,
+  `nazwa` VARCHAR(255) NOT NULL,
+  `pojemnosc` INT NOT NULL,
+  `zapelnienie` INT UNSIGNED ZEROFILL NOT NULL,
+  PRIMARY KEY (`id_magazyn`) USING BTREE
 );
 
-CREATE TABLE `pracownik`  (
-  `id_pracownik` int NOT NULL AUTO_INCREMENT,
-  `imie` text NOT NULL,
-  `nazwisko` text NOT NULL,
-  `pesel` text NULL,
-  PRIMARY KEY (`id_pracownik`)
+CREATE TABLE `stan_produktow` (
+  `id_stan_produktow` INT NOT NULL AUTO_INCREMENT,
+  `data_waznosci` DATE NOT NULL,
+  `ilosc` INT NOT NULL,
+  `id_dane_produktow` INT NOT NULL,
+  `id_magazyn` INT NOT NULL,
+  PRIMARY KEY (`id_stan_produktow`) USING BTREE,
+  FOREIGN KEY (`id_dane_produktow`) REFERENCES `dane_produktow` (`id_dane_produktow`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  FOREIGN KEY (`id_magazyn`) REFERENCES `magazyn` (`id_magazyn`) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-CREATE TABLE `premia`  (
-  `id_premia` int NOT NULL AUTO_INCREMENT,
-  `kwota` float NULL DEFAULT NULL,
-  `id_pracownik` int NULL DEFAULT NULL,
-  PRIMARY KEY (`id_premia`)
+CREATE TABLE `przedmiot_w_koszyku` (
+  `id_przedmiot_w_koszyku` INT NOT NULL AUTO_INCREMENT,
+  `ilosc` INT NOT NULL,
+  `id_stan_produktow` INT NOT NULL,
+  PRIMARY KEY (`id_przedmiot_w_koszyku`) USING BTREE,
+  FOREIGN KEY (`id_stan_produktow`) REFERENCES `stan_produktow` (`id_stan_produktow`) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-CREATE TABLE `przedmiotwkoszyku`  (
-  `id_przedmiotwkoszyku` int NOT NULL AUTO_INCREMENT,
-  `ilosc` int NOT NULL,
-  `id_stanproduktow` int NOT NULL,
-  PRIMARY KEY (`id_przedmiotwkoszyku`)
+CREATE TABLE `pracownik` (
+  `id_pracownik` INT NOT NULL AUTO_INCREMENT,
+  `imie` VARCHAR(255) NOT NULL,
+  `nazwisko` VARCHAR(255) NOT NULL,
+  `pesel` VARCHAR(11) NOT NULL,
+  `login` VARCHAR(255) NOT NULL,
+  `haslo` VARCHAR(255) NOT NULL,
+  `wynagrodzenie` FLOAT NOT NULL,
+  PRIMARY KEY (`id_pracownik`) USING BTREE
 );
 
-CREATE TABLE `stanowisko`  (
-  `id_stanowisko` int NOT NULL AUTO_INCREMENT,
-  `pozycja` text NULL,
-  `id_pracownik` int NULL DEFAULT NULL,
-  `id_wynagrodzenia` int NULL DEFAULT NULL,
-  PRIMARY KEY (`id_stanowisko`)
+CREATE TABLE `transakcja` (
+  `id_transakcji` INT NOT NULL AUTO_INCREMENT,
+  `kwota` FLOAT NOT NULL,
+  `data` DATETIME NOT NULL,
+  `rodzaj_transakcji` VARCHAR(255) NOT NULL,
+  `czy_finalizacja` BIT(1) NOT NULL,
+  `id_pracownik` INT NOT NULL,
+  PRIMARY KEY (`id_transakcji`) USING BTREE,
+  FOREIGN KEY (`id_pracownik`) REFERENCES `pracownik` (`id_pracownik`) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-CREATE TABLE `stanproduktów`  (
-  `id_stanproduktow` int NOT NULL AUTO_INCREMENT,
-  `dataWaznosci` date NOT NULL,
-  `ilosc` int NOT NULL,
-  `id_daneproduktow` int NOT NULL,
-  `id_magazyn` int NOT NULL,
-  PRIMARY KEY (`id_stanproduktow`)
+CREATE TABLE `koszyk` (
+  `id_koszyk` INT NOT NULL AUTO_INCREMENT,
+  `id_przedmiot_w_koszyku` INT NOT NULL,
+  `id_transakcji` INT NOT NULL,
+  PRIMARY KEY (`id_koszyk`) USING BTREE,
+  FOREIGN KEY (`id_przedmiot_w_koszyku`) REFERENCES `przedmiot_w_koszyku` (`id_przedmiot_w_koszyku`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  FOREIGN KEY (`id_transakcji`) REFERENCES `transakcja` (`id_transakcji`) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-CREATE TABLE `tranzakcja`  (
-  `id_tranzakcji` int NOT NULL AUTO_INCREMENT,
-  `kwota` int NOT NULL,
-  `data` datetime NOT NULL,
-  `rodzajtranzakcji` text NOT NULL,
-  `czyfinalizacja` bit(1) NOT NULL,
-  `id_pracownik` int NOT NULL,
-  `id_dziennyutarg` int NULL DEFAULT NULL,
-  PRIMARY KEY (`id_tranzakcji`)
+CREATE TABLE `login_historia` (
+  `id_logowania` INT NOT NULL AUTO_INCREMENT,
+  `data` DATETIME NOT NULL,
+  `operacja` VARCHAR(255) NOT NULL,
+  `id_pracownik` INT NULL,
+  PRIMARY KEY (`id_logowania`),
+  FOREIGN KEY (`id_pracownik`) REFERENCES `pracownik` (`id_pracownik`)
 );
 
-CREATE TABLE `wielosztuki`  (
-  `id_wielosztuki` int NOT NULL AUTO_INCREMENT,
-  `ilosc` int NULL DEFAULT NULL,
-  `cenaznizkaBrutto` float NULL DEFAULT NULL,
-  `cenaznizkaNetto` float NULL DEFAULT NULL,
-  `id_ceny` int NOT NULL,
-  PRIMARY KEY (`id_wielosztuki`)
+CREATE TABLE `stanowisko` (
+  `id_stanowisko` INT NOT NULL AUTO_INCREMENT,
+  `pozycja` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id_stanowisko`) USING BTREE
 );
 
-CREATE TABLE `wynagrodzenie`  (
-  `id_wynagrodzenie` int NOT NULL AUTO_INCREMENT,
-  `wynagrodzenieNetto` int NOT NULL,
-  `wynagrodzenieBrutto` int NOT NULL,
-  `koszt_zatrudnienia` int NOT NULL,
-  PRIMARY KEY (`id_wynagrodzenie`)
+CREATE TABLE `pracownik_stanowisko` (
+  `id_pracownik_stanowisko` INT NOT NULL AUTO_INCREMENT,
+  `id_pracownik` INT NOT NULL,
+  `id_stanowisko` INT NOT NULL,
+  PRIMARY KEY (`id_pracownik_stanowisko`),
+  FOREIGN KEY (`id_pracownik`) REFERENCES `pracownik` (`id_pracownik`),
+  FOREIGN KEY (`id_stanowisko`) REFERENCES `stanowisko` (`id_stanowisko`)
 );
 
-ALTER TABLE `daneproduktów` ADD CONSTRAINT `fk_daneProduktów_kategoria_1` FOREIGN KEY (`id_kategoria`) REFERENCES `kategoria` (`id_kategoria`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `daneproduktów` ADD CONSTRAINT `fk_daneProduktów_ceny_1` FOREIGN KEY (`id_ceny`) REFERENCES `ceny` (`id_ceny`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `koszyk` ADD CONSTRAINT `fk_koszyk_przedmiotWKoszyku_1` FOREIGN KEY (`id_przedmiotwkoszyku`) REFERENCES `przedmiotwkoszyku` (`id_przedmiotwkoszyku`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `koszyk` ADD CONSTRAINT `fk_koszyk_tranzakcja_1` FOREIGN KEY (`id_tranzakcji`) REFERENCES `tranzakcja` (`id_tranzakcji`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `premia` ADD CONSTRAINT `fk_premia_pracowicy_1` FOREIGN KEY (`id_pracownik`) REFERENCES `pracownik` (`id_pracownik`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `przedmiotwkoszyku` ADD CONSTRAINT `fk_przedmiotWKoszyku_stanProduktów_1` FOREIGN KEY (`id_stanproduktow`) REFERENCES `stanproduktów` (`id_stanproduktow`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `stanowisko` ADD CONSTRAINT `fk_przedmiotWKoszyku_pracownicy_1` FOREIGN KEY (`id_pracownik`) REFERENCES `pracownik` (`id_pracownik`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `stanowisko` ADD CONSTRAINT `fk_stanowisko_wynagrodzenie_1` FOREIGN KEY (`id_wynagrodzenia`) REFERENCES `wynagrodzenie` (`id_wynagrodzenie`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `stanproduktów` ADD CONSTRAINT `fk_stanProduktów_daneProduktów_1` FOREIGN KEY (`id_daneproduktow`) REFERENCES `daneproduktów` (`id_daneproduktow`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `stanproduktów` ADD CONSTRAINT `fk_stanProduktów_magazyn_1` FOREIGN KEY (`id_magazyn`) REFERENCES `magazyn` (`id_magazyn`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `tranzakcja` ADD CONSTRAINT `fk_tranzakcja_pracowincy_1` FOREIGN KEY (`id_pracownik`) REFERENCES `pracownik` (`id_pracownik`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `tranzakcja` ADD CONSTRAINT `fk_tranzakcja_dziennyUtarg_1` FOREIGN KEY (`id_dziennyutarg`) REFERENCES `dziennyutarg` (`id_dziennyutarg`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `wielosztuki` ADD CONSTRAINT `fk_wielosztuki_ceny_1` FOREIGN KEY (`id_ceny`) REFERENCES `ceny` (`id_ceny`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Stowrzenie widoków
-CREATE VIEW infopracownik AS
-SELECT 
-    p.imie,
-    p.nazwisko,
-    p.pesel,
-    s.pozycja,
-    w.wynagrodzenieNetto,
-    w.wynagrodzenieBrutto
-FROM pracownik p
-JOIN stanowisko s ON p.id_pracownik = s.id_pracownik
-JOIN wynagrodzenie w ON s.id_wynagrodzenia = w.id_wynagrodzenie;
-
-
-CREATE VIEW infoproduktmagazyn AS
-SELECT 
-    dp.nazwa AS nazwa_produktu,
-    k.nazwaKategorii AS kategoria,
-    c.cenaBrutto AS cena_brutto,
-    sp.ilosc AS ilosc_w_magazynie,
-    m.nazwa AS nazwa_magazynu
-FROM stanproduktów sp
-JOIN daneproduktów dp ON sp.id_daneproduktow = dp.id_daneproduktow
-JOIN kategoria k ON dp.id_kategoria = k.id_kategoria
-JOIN ceny c ON dp.id_ceny = c.id_ceny
-JOIN magazyn m ON sp.id_magazyn = m.id_magazyn;
+CREATE TABLE `wielo_sztuki` (
+  `id_wielo_sztuki` INT NOT NULL AUTO_INCREMENT,
+  `ilosc` INT NULL DEFAULT NULL,
+  `cena_znizka_brutto` FLOAT NULL DEFAULT NULL,
+  `cena_znizka_netto` FLOAT NULL DEFAULT NULL,
+  `id_ceny` INT NOT NULL,
+  PRIMARY KEY (`id_wielo_sztuki`) USING BTREE,
+  FOREIGN KEY (`id_ceny`) REFERENCES `ceny` (`id_ceny`) ON DELETE RESTRICT ON UPDATE RESTRICT
+);

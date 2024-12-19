@@ -1,4 +1,4 @@
-Atrybut logi hasło do pracownik
+Atrybut login hasło do pracownik
 Historia logowania
 Text -> Varchar optymalizacja
 Int -> float wypłata
