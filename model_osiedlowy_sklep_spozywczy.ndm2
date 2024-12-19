@@ -21,19 +21,7 @@
         "objectType": "Schema_MYSQL",
         "name": "default",
         "tables": [],
-        "views": [
-          {
-            "objectType": "View_MYSQL",
-            "name": "infopracownik",
-            "selectStatement": "SELECT \r\n    p.imie,\r\n    p.nazwisko,\r\n    p.pesel,\r\n    s.pozycja,\r\n    w.wynagrodzenieNetto,\r\n    w.wynagrodzenieBrutto\r\nFROM pracownik p\r\nJOIN stanowisko s ON p.id_pracownik = s.id_pracownik\r\nJOIN wynagrodzenie w ON s.id_wynagrodzenia = w.id_wynagrodzenie;",
-            "viewAlgorithm": "",
-            "sqlSecurity": "",
-            "checkOption": "",
-            "definer": "",
-            "oldName": "",
-            "isUpdatable": false
-          }
-        ]
+        "views": []
       },
       {
         "objectType": "Schema_MYSQL",
@@ -41,12 +29,12 @@
         "tables": [
           {
             "objectType": "Table_MYSQL",
-            "name": "dziennyutarg",
+            "name": "ceny",
             "comment": "",
             "engine": "InnoDB",
             "characterSet": "utf8mb4",
             "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 11,
+            "autoIncrement": 4,
             "tablespace": "",
             "storage": "",
             "insertMethod": "",
@@ -68,18 +56,18 @@
             "pageCheckSum": false,
             "transactional": false,
             "compression": "",
-            "oldName": "dziennyutarg",
+            "oldName": "ceny",
             "encryption": false,
             "createOptions": "",
-            "createTime": "2024-11-21 18:28:33",
+            "createTime": "2024-12-19 20:00:23",
             "checkTime": "",
             "dataFree": 0,
             "dataLength": 16384,
             "indexLength": 0,
             "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `dziennyutarg` (\n  `id_dziennyutarg` int NOT NULL AUTO_INCREMENT,\n  `data` date DEFAULT NULL,\n  `kwotaŁączna` float DEFAULT NULL,\n  PRIMARY KEY (`id_dziennyutarg`)\n) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "rows": 3,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `ceny` (\n  `id_ceny` int NOT NULL AUTO_INCREMENT,\n  `czy_na_sztuki` bit(1) NOT NULL,\n  `cena_brutto` float DEFAULT NULL,\n  `cena_netto` float DEFAULT NULL,\n  PRIMARY KEY (`id_ceny`)\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
             "partitionBy": "",
             "partitionByExpr": "",
             "partitions": 0,
@@ -91,7 +79,7 @@
             "fields": [
               {
                 "objectType": "TableField_MYSQL",
-                "name": "id_dziennyutarg",
+                "name": "id_ceny",
                 "type": "int",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -113,13 +101,13 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "id_dziennyutarg"
+                "oldName": "id_ceny"
               },
               {
                 "objectType": "TableField_MYSQL",
-                "name": "data",
-                "type": "date",
-                "length": -2147483648,
+                "name": "czy_na_sztuki",
+                "type": "bit",
+                "length": 1,
                 "decimals": -2147483648,
                 "isUnsigned": false,
                 "isZeroFill": false,
@@ -127,8 +115,8 @@
                 "isBinary": false,
                 "charset": "",
                 "collation": "",
-                "isNullable": true,
-                "defaultType": "Null",
+                "isNullable": false,
+                "defaultType": "Others",
                 "defaultValue": "",
                 "isOnUpdateCurrentTimestamp": false,
                 "isAutoInc": false,
@@ -139,11 +127,11 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "data"
+                "oldName": "czy_na_sztuki"
               },
               {
                 "objectType": "TableField_MYSQL",
-                "name": "kwotaŁączna",
+                "name": "cena_brutto",
                 "type": "float",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -165,7 +153,33 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "kwotaŁączna"
+                "oldName": "cena_brutto"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "cena_netto",
+                "type": "float",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": true,
+                "defaultType": "Null",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "cena_netto"
               }
             ],
             "indexes": [],
@@ -175,10 +189,10 @@
               "fields": [
                 {
                   "objectType": "IndexField_MYSQL",
-                  "name": "id_dziennyutarg",
+                  "name": "id_ceny",
                   "keyLength": 0,
                   "order": "",
-                  "oldName": "id_dziennyutarg"
+                  "oldName": "id_ceny"
                 }
               ],
               "oldName": "",
@@ -192,12 +206,620 @@
           },
           {
             "objectType": "Table_MYSQL",
+            "name": "ceny_historia",
+            "comment": "",
+            "engine": "InnoDB",
+            "characterSet": "utf8mb4",
+            "collation": "utf8mb4_0900_ai_ci",
+            "autoIncrement": 4,
+            "tablespace": "",
+            "storage": "",
+            "insertMethod": "",
+            "connection": "",
+            "checksum": false,
+            "rowFormat": "Dynamic",
+            "avgRowLength": 0,
+            "maxRows": 0,
+            "minRows": 0,
+            "keyBlockSize": 0,
+            "packKeys": "",
+            "delayKeyWrite": false,
+            "dataDirectory": "",
+            "indexDirectory": "",
+            "statsAutoRecalc": "",
+            "statsPersistent": "",
+            "statsSamplePages": 0,
+            "union": "",
+            "pageCheckSum": false,
+            "transactional": false,
+            "compression": "",
+            "oldName": "ceny_historia",
+            "encryption": false,
+            "createOptions": "",
+            "createTime": "2024-12-19 20:00:23",
+            "checkTime": "",
+            "dataFree": 0,
+            "dataLength": 16384,
+            "indexLength": 16384,
+            "maxDataLength": 0,
+            "rows": 3,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `ceny_historia` (\n  `id_historia_ceny` int NOT NULL AUTO_INCREMENT,\n  `id_ceny` int NOT NULL,\n  `data_zmiany` date NOT NULL,\n  `cena_brutto` float NOT NULL,\n  `cena_netto` float NOT NULL,\n  PRIMARY KEY (`id_historia_ceny`),\n  KEY `ceny_historia_ibfk_1` (`id_ceny`),\n  CONSTRAINT `ceny_historia_ibfk_1` FOREIGN KEY (`id_ceny`) REFERENCES `ceny` (`id_ceny`) ON DELETE RESTRICT ON UPDATE RESTRICT\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "partitionBy": "",
+            "partitionByExpr": "",
+            "partitions": 0,
+            "partitionKeyAlgorithm": "",
+            "subPartitionBy": "",
+            "subPartitionByExpr": "",
+            "subPartitions": 0,
+            "subPartitionKeyAlgorithm": "",
+            "fields": [
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_historia_ceny",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": true,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_historia_ceny"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_ceny",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_ceny"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "data_zmiany",
+                "type": "date",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "data_zmiany"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "cena_brutto",
+                "type": "float",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "cena_brutto"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "cena_netto",
+                "type": "float",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "cena_netto"
+              }
+            ],
+            "indexes": [
+              {
+                "objectType": "Index_MYSQL",
+                "name": "ceny_historia_ibfk_1",
+                "type": "NORMAL",
+                "method": "BTREE",
+                "comment": "",
+                "oldName": "ceny_historia_ibfk_1",
+                "online": false,
+                "keyBlockSize": 0,
+                "parser": "",
+                "algorithm": "",
+                "lock": "",
+                "collation": "A",
+                "cardinality": "3",
+                "packed": "",
+                "IsVisibleIndex": true,
+                "fields": [
+                  {
+                    "objectType": "IndexField_MYSQL",
+                    "name": "id_ceny",
+                    "keyLength": 0,
+                    "order": "ASC",
+                    "oldName": "id_ceny"
+                  }
+                ]
+              }
+            ],
+            "primaryKey": {
+              "objectType": "PrimaryKey_MYSQL",
+              "name": "",
+              "fields": [
+                {
+                  "objectType": "IndexField_MYSQL",
+                  "name": "id_historia_ceny",
+                  "keyLength": 0,
+                  "order": "",
+                  "oldName": "id_historia_ceny"
+                }
+              ],
+              "oldName": "",
+              "indexMethod": "BTREE",
+              "comment": ""
+            },
+            "foreignKeys": [
+              {
+                "objectType": "ForeignKey_MYSQL",
+                "name": "ceny_historia_ibfk_1",
+                "fields": [
+                  "id_ceny"
+                ],
+                "referenceSchema": "osiedlowy_sklep_spozywczy",
+                "referenceTable": "ceny",
+                "referenceFields": [
+                  "id_ceny"
+                ],
+                "onDelete": "RESTRICT",
+                "onUpdate": "RESTRICT",
+                "sourceCardinality": "ZeroOrManyRelationship",
+                "targetCardinality": "OneAndOnlyOneRelationship",
+                "oldName": "ceny_historia_ibfk_1"
+              }
+            ],
+            "checks": [],
+            "triggers": [],
+            "tablePartitions": []
+          },
+          {
+            "objectType": "Table_MYSQL",
+            "name": "dane_produktow",
+            "comment": "",
+            "engine": "InnoDB",
+            "characterSet": "utf8mb4",
+            "collation": "utf8mb4_0900_ai_ci",
+            "autoIncrement": 4,
+            "tablespace": "",
+            "storage": "",
+            "insertMethod": "",
+            "connection": "",
+            "checksum": false,
+            "rowFormat": "Dynamic",
+            "avgRowLength": 0,
+            "maxRows": 0,
+            "minRows": 0,
+            "keyBlockSize": 0,
+            "packKeys": "",
+            "delayKeyWrite": false,
+            "dataDirectory": "",
+            "indexDirectory": "",
+            "statsAutoRecalc": "",
+            "statsPersistent": "",
+            "statsSamplePages": 0,
+            "union": "",
+            "pageCheckSum": false,
+            "transactional": false,
+            "compression": "",
+            "oldName": "dane_produktow",
+            "encryption": false,
+            "createOptions": "",
+            "createTime": "2024-12-19 20:00:24",
+            "checkTime": "",
+            "dataFree": 0,
+            "dataLength": 16384,
+            "indexLength": 49152,
+            "maxDataLength": 0,
+            "rows": 3,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `dane_produktow` (\n  `id_dane_produktow` int NOT NULL AUTO_INCREMENT,\n  `nazwa` varchar(255) NOT NULL,\n  `vat` float NOT NULL,\n  `id_kategoria` int NOT NULL,\n  `id_ceny` int NOT NULL,\n  `id_producenta` int NOT NULL,\n  PRIMARY KEY (`id_dane_produktow`),\n  KEY `dane_produktow_ibfk_1` (`id_kategoria`),\n  KEY `dane_produktow_ibfk_2` (`id_ceny`),\n  KEY `dane_produktow_ibfk_3` (`id_producenta`),\n  CONSTRAINT `dane_produktow_ibfk_1` FOREIGN KEY (`id_kategoria`) REFERENCES `kategoria` (`id_kategoria`) ON DELETE RESTRICT ON UPDATE RESTRICT,\n  CONSTRAINT `dane_produktow_ibfk_2` FOREIGN KEY (`id_ceny`) REFERENCES `ceny` (`id_ceny`) ON DELETE RESTRICT ON UPDATE RESTRICT,\n  CONSTRAINT `dane_produktow_ibfk_3` FOREIGN KEY (`id_producenta`) REFERENCES `producent` (`id_producent`) ON DELETE RESTRICT ON UPDATE RESTRICT\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "partitionBy": "",
+            "partitionByExpr": "",
+            "partitions": 0,
+            "partitionKeyAlgorithm": "",
+            "subPartitionBy": "",
+            "subPartitionByExpr": "",
+            "subPartitions": 0,
+            "subPartitionKeyAlgorithm": "",
+            "fields": [
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_dane_produktow",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": true,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_dane_produktow"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "nazwa",
+                "type": "varchar",
+                "length": 255,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "utf8mb4",
+                "collation": "utf8mb4_0900_ai_ci",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "nazwa"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "vat",
+                "type": "float",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "vat"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_kategoria",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_kategoria"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_ceny",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_ceny"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_producenta",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_producenta"
+              }
+            ],
+            "indexes": [
+              {
+                "objectType": "Index_MYSQL",
+                "name": "dane_produktow_ibfk_1",
+                "type": "NORMAL",
+                "method": "BTREE",
+                "comment": "",
+                "oldName": "dane_produktow_ibfk_1",
+                "online": false,
+                "keyBlockSize": 0,
+                "parser": "",
+                "algorithm": "",
+                "lock": "",
+                "collation": "A",
+                "cardinality": "3",
+                "packed": "",
+                "IsVisibleIndex": true,
+                "fields": [
+                  {
+                    "objectType": "IndexField_MYSQL",
+                    "name": "id_kategoria",
+                    "keyLength": 0,
+                    "order": "ASC",
+                    "oldName": "id_kategoria"
+                  }
+                ]
+              },
+              {
+                "objectType": "Index_MYSQL",
+                "name": "dane_produktow_ibfk_2",
+                "type": "NORMAL",
+                "method": "BTREE",
+                "comment": "",
+                "oldName": "dane_produktow_ibfk_2",
+                "online": false,
+                "keyBlockSize": 0,
+                "parser": "",
+                "algorithm": "",
+                "lock": "",
+                "collation": "A",
+                "cardinality": "3",
+                "packed": "",
+                "IsVisibleIndex": true,
+                "fields": [
+                  {
+                    "objectType": "IndexField_MYSQL",
+                    "name": "id_ceny",
+                    "keyLength": 0,
+                    "order": "ASC",
+                    "oldName": "id_ceny"
+                  }
+                ]
+              },
+              {
+                "objectType": "Index_MYSQL",
+                "name": "dane_produktow_ibfk_3",
+                "type": "NORMAL",
+                "method": "BTREE",
+                "comment": "",
+                "oldName": "dane_produktow_ibfk_3",
+                "online": false,
+                "keyBlockSize": 0,
+                "parser": "",
+                "algorithm": "",
+                "lock": "",
+                "collation": "A",
+                "cardinality": "3",
+                "packed": "",
+                "IsVisibleIndex": true,
+                "fields": [
+                  {
+                    "objectType": "IndexField_MYSQL",
+                    "name": "id_producenta",
+                    "keyLength": 0,
+                    "order": "ASC",
+                    "oldName": "id_producenta"
+                  }
+                ]
+              }
+            ],
+            "primaryKey": {
+              "objectType": "PrimaryKey_MYSQL",
+              "name": "",
+              "fields": [
+                {
+                  "objectType": "IndexField_MYSQL",
+                  "name": "id_dane_produktow",
+                  "keyLength": 0,
+                  "order": "",
+                  "oldName": "id_dane_produktow"
+                }
+              ],
+              "oldName": "",
+              "indexMethod": "BTREE",
+              "comment": ""
+            },
+            "foreignKeys": [
+              {
+                "objectType": "ForeignKey_MYSQL",
+                "name": "dane_produktow_ibfk_1",
+                "fields": [
+                  "id_kategoria"
+                ],
+                "referenceSchema": "osiedlowy_sklep_spozywczy",
+                "referenceTable": "kategoria",
+                "referenceFields": [
+                  "id_kategoria"
+                ],
+                "onDelete": "RESTRICT",
+                "onUpdate": "RESTRICT",
+                "sourceCardinality": "ZeroOrManyRelationship",
+                "targetCardinality": "OneAndOnlyOneRelationship",
+                "oldName": "dane_produktow_ibfk_1"
+              },
+              {
+                "objectType": "ForeignKey_MYSQL",
+                "name": "dane_produktow_ibfk_2",
+                "fields": [
+                  "id_ceny"
+                ],
+                "referenceSchema": "osiedlowy_sklep_spozywczy",
+                "referenceTable": "ceny",
+                "referenceFields": [
+                  "id_ceny"
+                ],
+                "onDelete": "RESTRICT",
+                "onUpdate": "RESTRICT",
+                "sourceCardinality": "ZeroOrManyRelationship",
+                "targetCardinality": "OneAndOnlyOneRelationship",
+                "oldName": "dane_produktow_ibfk_2"
+              },
+              {
+                "objectType": "ForeignKey_MYSQL",
+                "name": "dane_produktow_ibfk_3",
+                "fields": [
+                  "id_producenta"
+                ],
+                "referenceSchema": "osiedlowy_sklep_spozywczy",
+                "referenceTable": "producent",
+                "referenceFields": [
+                  "id_producent"
+                ],
+                "onDelete": "RESTRICT",
+                "onUpdate": "RESTRICT",
+                "sourceCardinality": "ZeroOrManyRelationship",
+                "targetCardinality": "OneAndOnlyOneRelationship",
+                "oldName": "dane_produktow_ibfk_3"
+              }
+            ],
+            "checks": [],
+            "triggers": [],
+            "tablePartitions": []
+          },
+          {
+            "objectType": "Table_MYSQL",
             "name": "kategoria",
             "comment": "",
             "engine": "InnoDB",
             "characterSet": "utf8mb4",
             "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 11,
+            "autoIncrement": 4,
             "tablespace": "",
             "storage": "",
             "insertMethod": "",
@@ -222,15 +844,15 @@
             "oldName": "kategoria",
             "encryption": false,
             "createOptions": "",
-            "createTime": "2024-11-21 18:28:33",
+            "createTime": "2024-12-19 20:00:23",
             "checkTime": "",
             "dataFree": 0,
             "dataLength": 16384,
             "indexLength": 0,
             "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `kategoria` (\n  `id_kategoria` int NOT NULL AUTO_INCREMENT,\n  `nazwaKategorii` text,\n  PRIMARY KEY (`id_kategoria`)\n) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "rows": 3,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `kategoria` (\n  `id_kategoria` int NOT NULL AUTO_INCREMENT,\n  `nazwa_kategorii` varchar(255) NOT NULL,\n  PRIMARY KEY (`id_kategoria`)\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
             "partitionBy": "",
             "partitionByExpr": "",
             "partitions": 0,
@@ -268,9 +890,9 @@
               },
               {
                 "objectType": "TableField_MYSQL",
-                "name": "nazwaKategorii",
-                "type": "text",
-                "length": -2147483648,
+                "name": "nazwa_kategorii",
+                "type": "varchar",
+                "length": 255,
                 "decimals": -2147483648,
                 "isUnsigned": false,
                 "isZeroFill": false,
@@ -278,8 +900,8 @@
                 "isBinary": false,
                 "charset": "utf8mb4",
                 "collation": "utf8mb4_0900_ai_ci",
-                "isNullable": true,
-                "defaultType": "Null",
+                "isNullable": false,
+                "defaultType": "Others",
                 "defaultValue": "",
                 "isOnUpdateCurrentTimestamp": false,
                 "isAutoInc": false,
@@ -290,7 +912,7 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "nazwaKategorii"
+                "oldName": "nazwa_kategorii"
               }
             ],
             "indexes": [],
@@ -322,7 +944,7 @@
             "engine": "InnoDB",
             "characterSet": "utf8mb4",
             "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 11,
+            "autoIncrement": 3,
             "tablespace": "",
             "storage": "",
             "insertMethod": "",
@@ -347,15 +969,15 @@
             "oldName": "koszyk",
             "encryption": false,
             "createOptions": "",
-            "createTime": "2024-11-21 18:28:34",
+            "createTime": "2024-12-19 20:00:24",
             "checkTime": "",
             "dataFree": 0,
             "dataLength": 16384,
-            "indexLength": 32768,
+            "indexLength": 16384,
             "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `koszyk` (\n  `id_koszyk` int NOT NULL AUTO_INCREMENT,\n  `id_przedmiotwkoszyku` int NOT NULL,\n  `id_tranzakcji` int NOT NULL,\n  PRIMARY KEY (`id_koszyk`),\n  KEY `fk_koszyk_przedmiotWKoszyku_1` (`id_przedmiotwkoszyku`),\n  KEY `fk_koszyk_tranzakcja_1` (`id_tranzakcji`),\n  CONSTRAINT `fk_koszyk_przedmiotWKoszyku_1` FOREIGN KEY (`id_przedmiotwkoszyku`) REFERENCES `przedmiotwkoszyku` (`id_przedmiotwkoszyku`),\n  CONSTRAINT `fk_koszyk_tranzakcja_1` FOREIGN KEY (`id_tranzakcji`) REFERENCES `tranzakcja` (`id_tranzakcji`)\n) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "rows": 2,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `koszyk` (\n  `id_koszyk` int NOT NULL AUTO_INCREMENT,\n  `ilosc` int NOT NULL,\n  `id_dane_produktow` int NOT NULL,\n  PRIMARY KEY (`id_koszyk`),\n  KEY `koszyk_ibfk_1` (`id_dane_produktow`),\n  CONSTRAINT `koszyk_ibfk_1` FOREIGN KEY (`id_dane_produktow`) REFERENCES `dane_produktow` (`id_dane_produktow`) ON DELETE RESTRICT ON UPDATE RESTRICT\n) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
             "partitionBy": "",
             "partitionByExpr": "",
             "partitions": 0,
@@ -393,7 +1015,7 @@
               },
               {
                 "objectType": "TableField_MYSQL",
-                "name": "id_przedmiotwkoszyku",
+                "name": "ilosc",
                 "type": "int",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -415,11 +1037,11 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "id_przedmiotwkoszyku"
+                "oldName": "ilosc"
               },
               {
                 "objectType": "TableField_MYSQL",
-                "name": "id_tranzakcji",
+                "name": "id_dane_produktow",
                 "type": "int",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -441,59 +1063,33 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "id_tranzakcji"
+                "oldName": "id_dane_produktow"
               }
             ],
             "indexes": [
               {
                 "objectType": "Index_MYSQL",
-                "name": "fk_koszyk_przedmiotWKoszyku_1",
+                "name": "koszyk_ibfk_1",
                 "type": "NORMAL",
                 "method": "BTREE",
                 "comment": "",
-                "oldName": "fk_koszyk_przedmiotWKoszyku_1",
+                "oldName": "koszyk_ibfk_1",
                 "online": false,
                 "keyBlockSize": 0,
                 "parser": "",
                 "algorithm": "",
                 "lock": "",
                 "collation": "A",
-                "cardinality": "10",
+                "cardinality": "2",
                 "packed": "",
                 "IsVisibleIndex": true,
                 "fields": [
                   {
                     "objectType": "IndexField_MYSQL",
-                    "name": "id_przedmiotwkoszyku",
+                    "name": "id_dane_produktow",
                     "keyLength": 0,
                     "order": "ASC",
-                    "oldName": "id_przedmiotwkoszyku"
-                  }
-                ]
-              },
-              {
-                "objectType": "Index_MYSQL",
-                "name": "fk_koszyk_tranzakcja_1",
-                "type": "NORMAL",
-                "method": "BTREE",
-                "comment": "",
-                "oldName": "fk_koszyk_tranzakcja_1",
-                "online": false,
-                "keyBlockSize": 0,
-                "parser": "",
-                "algorithm": "",
-                "lock": "",
-                "collation": "A",
-                "cardinality": "10",
-                "packed": "",
-                "IsVisibleIndex": true,
-                "fields": [
-                  {
-                    "objectType": "IndexField_MYSQL",
-                    "name": "id_tranzakcji",
-                    "keyLength": 0,
-                    "order": "ASC",
-                    "oldName": "id_tranzakcji"
+                    "oldName": "id_dane_produktow"
                   }
                 ]
               }
@@ -517,37 +1113,367 @@
             "foreignKeys": [
               {
                 "objectType": "ForeignKey_MYSQL",
-                "name": "fk_koszyk_przedmiotWKoszyku_1",
+                "name": "koszyk_ibfk_1",
                 "fields": [
-                  "id_przedmiotwkoszyku"
+                  "id_dane_produktow"
                 ],
                 "referenceSchema": "osiedlowy_sklep_spozywczy",
-                "referenceTable": "przedmiotwkoszyku",
+                "referenceTable": "dane_produktow",
                 "referenceFields": [
-                  "id_przedmiotwkoszyku"
+                  "id_dane_produktow"
                 ],
                 "onDelete": "RESTRICT",
                 "onUpdate": "RESTRICT",
                 "sourceCardinality": "ZeroOrManyRelationship",
                 "targetCardinality": "OneAndOnlyOneRelationship",
-                "oldName": "fk_koszyk_przedmiotWKoszyku_1"
+                "oldName": "koszyk_ibfk_1"
+              }
+            ],
+            "checks": [],
+            "triggers": [],
+            "tablePartitions": []
+          },
+          {
+            "objectType": "Table_MYSQL",
+            "name": "kraj_producenta",
+            "comment": "",
+            "engine": "InnoDB",
+            "characterSet": "utf8mb4",
+            "collation": "utf8mb4_0900_ai_ci",
+            "autoIncrement": 4,
+            "tablespace": "",
+            "storage": "",
+            "insertMethod": "",
+            "connection": "",
+            "checksum": false,
+            "rowFormat": "Dynamic",
+            "avgRowLength": 0,
+            "maxRows": 0,
+            "minRows": 0,
+            "keyBlockSize": 0,
+            "packKeys": "",
+            "delayKeyWrite": false,
+            "dataDirectory": "",
+            "indexDirectory": "",
+            "statsAutoRecalc": "",
+            "statsPersistent": "",
+            "statsSamplePages": 0,
+            "union": "",
+            "pageCheckSum": false,
+            "transactional": false,
+            "compression": "",
+            "oldName": "kraj_producenta",
+            "encryption": false,
+            "createOptions": "",
+            "createTime": "2024-12-19 20:00:23",
+            "checkTime": "",
+            "dataFree": 0,
+            "dataLength": 16384,
+            "indexLength": 0,
+            "maxDataLength": 0,
+            "rows": 3,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `kraj_producenta` (\n  `id_kraj_producenta` int NOT NULL AUTO_INCREMENT,\n  `nazwa` varchar(255) DEFAULT NULL,\n  PRIMARY KEY (`id_kraj_producenta`)\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "partitionBy": "",
+            "partitionByExpr": "",
+            "partitions": 0,
+            "partitionKeyAlgorithm": "",
+            "subPartitionBy": "",
+            "subPartitionByExpr": "",
+            "subPartitions": 0,
+            "subPartitionKeyAlgorithm": "",
+            "fields": [
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_kraj_producenta",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": true,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_kraj_producenta"
               },
               {
-                "objectType": "ForeignKey_MYSQL",
-                "name": "fk_koszyk_tranzakcja_1",
+                "objectType": "TableField_MYSQL",
+                "name": "nazwa",
+                "type": "varchar",
+                "length": 255,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "utf8mb4",
+                "collation": "utf8mb4_0900_ai_ci",
+                "isNullable": true,
+                "defaultType": "Null",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "nazwa"
+              }
+            ],
+            "indexes": [],
+            "primaryKey": {
+              "objectType": "PrimaryKey_MYSQL",
+              "name": "",
+              "fields": [
+                {
+                  "objectType": "IndexField_MYSQL",
+                  "name": "id_kraj_producenta",
+                  "keyLength": 0,
+                  "order": "",
+                  "oldName": "id_kraj_producenta"
+                }
+              ],
+              "oldName": "",
+              "indexMethod": "BTREE",
+              "comment": ""
+            },
+            "foreignKeys": [],
+            "checks": [],
+            "triggers": [],
+            "tablePartitions": []
+          },
+          {
+            "objectType": "Table_MYSQL",
+            "name": "login_historia",
+            "comment": "",
+            "engine": "InnoDB",
+            "characterSet": "utf8mb4",
+            "collation": "utf8mb4_0900_ai_ci",
+            "autoIncrement": 5,
+            "tablespace": "",
+            "storage": "",
+            "insertMethod": "",
+            "connection": "",
+            "checksum": false,
+            "rowFormat": "Dynamic",
+            "avgRowLength": 0,
+            "maxRows": 0,
+            "minRows": 0,
+            "keyBlockSize": 0,
+            "packKeys": "",
+            "delayKeyWrite": false,
+            "dataDirectory": "",
+            "indexDirectory": "",
+            "statsAutoRecalc": "",
+            "statsPersistent": "",
+            "statsSamplePages": 0,
+            "union": "",
+            "pageCheckSum": false,
+            "transactional": false,
+            "compression": "",
+            "oldName": "login_historia",
+            "encryption": false,
+            "createOptions": "",
+            "createTime": "2024-12-19 20:00:24",
+            "checkTime": "",
+            "dataFree": 0,
+            "dataLength": 16384,
+            "indexLength": 16384,
+            "maxDataLength": 0,
+            "rows": 4,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `login_historia` (\n  `id_logowania` int NOT NULL AUTO_INCREMENT,\n  `data` datetime NOT NULL,\n  `operacja` varchar(255) NOT NULL,\n  `id_pracownik` int DEFAULT NULL,\n  PRIMARY KEY (`id_logowania`),\n  KEY `login_historia_ibfk_1` (`id_pracownik`),\n  CONSTRAINT `login_historia_ibfk_1` FOREIGN KEY (`id_pracownik`) REFERENCES `pracownik` (`id_pracownik`) ON DELETE RESTRICT ON UPDATE RESTRICT\n) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "partitionBy": "",
+            "partitionByExpr": "",
+            "partitions": 0,
+            "partitionKeyAlgorithm": "",
+            "subPartitionBy": "",
+            "subPartitionByExpr": "",
+            "subPartitions": 0,
+            "subPartitionKeyAlgorithm": "",
+            "fields": [
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_logowania",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": true,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_logowania"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "data",
+                "type": "datetime",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "data"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "operacja",
+                "type": "varchar",
+                "length": 255,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "utf8mb4",
+                "collation": "utf8mb4_0900_ai_ci",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "operacja"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_pracownik",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": true,
+                "defaultType": "Null",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_pracownik"
+              }
+            ],
+            "indexes": [
+              {
+                "objectType": "Index_MYSQL",
+                "name": "login_historia_ibfk_1",
+                "type": "NORMAL",
+                "method": "BTREE",
+                "comment": "",
+                "oldName": "login_historia_ibfk_1",
+                "online": false,
+                "keyBlockSize": 0,
+                "parser": "",
+                "algorithm": "",
+                "lock": "",
+                "collation": "A",
+                "cardinality": "2",
+                "packed": "",
+                "IsVisibleIndex": true,
                 "fields": [
-                  "id_tranzakcji"
+                  {
+                    "objectType": "IndexField_MYSQL",
+                    "name": "id_pracownik",
+                    "keyLength": 0,
+                    "order": "ASC",
+                    "oldName": "id_pracownik"
+                  }
+                ]
+              }
+            ],
+            "primaryKey": {
+              "objectType": "PrimaryKey_MYSQL",
+              "name": "",
+              "fields": [
+                {
+                  "objectType": "IndexField_MYSQL",
+                  "name": "id_logowania",
+                  "keyLength": 0,
+                  "order": "",
+                  "oldName": "id_logowania"
+                }
+              ],
+              "oldName": "",
+              "indexMethod": "BTREE",
+              "comment": ""
+            },
+            "foreignKeys": [
+              {
+                "objectType": "ForeignKey_MYSQL",
+                "name": "login_historia_ibfk_1",
+                "fields": [
+                  "id_pracownik"
                 ],
                 "referenceSchema": "osiedlowy_sklep_spozywczy",
-                "referenceTable": "tranzakcja",
+                "referenceTable": "pracownik",
                 "referenceFields": [
-                  "id_tranzakcji"
+                  "id_pracownik"
                 ],
                 "onDelete": "RESTRICT",
                 "onUpdate": "RESTRICT",
                 "sourceCardinality": "ZeroOrManyRelationship",
-                "targetCardinality": "OneAndOnlyOneRelationship",
-                "oldName": "fk_koszyk_tranzakcja_1"
+                "targetCardinality": "ZeroOrOneRelationship",
+                "oldName": "login_historia_ibfk_1"
               }
             ],
             "checks": [],
@@ -561,7 +1487,7 @@
             "engine": "InnoDB",
             "characterSet": "utf8mb4",
             "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 11,
+            "autoIncrement": 4,
             "tablespace": "",
             "storage": "",
             "insertMethod": "",
@@ -586,15 +1512,15 @@
             "oldName": "magazyn",
             "encryption": false,
             "createOptions": "",
-            "createTime": "2024-11-21 18:28:33",
+            "createTime": "2024-12-19 20:00:23",
             "checkTime": "",
             "dataFree": 0,
             "dataLength": 16384,
             "indexLength": 0,
             "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `magazyn` (\n  `id_magazyn` int NOT NULL AUTO_INCREMENT,\n  `nazwa` text NOT NULL,\n  `pojemnosc` int NOT NULL,\n  `zapelnienie` int(10) unsigned zerofill NOT NULL,\n  PRIMARY KEY (`id_magazyn`)\n) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "rows": 3,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `magazyn` (\n  `id_magazyn` int NOT NULL AUTO_INCREMENT,\n  `nazwa` varchar(255) NOT NULL,\n  `pojemnosc` int NOT NULL,\n  `zapelnienie` int NOT NULL,\n  PRIMARY KEY (`id_magazyn`)\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
             "partitionBy": "",
             "partitionByExpr": "",
             "partitions": 0,
@@ -633,8 +1559,8 @@
               {
                 "objectType": "TableField_MYSQL",
                 "name": "nazwa",
-                "type": "text",
-                "length": -2147483648,
+                "type": "varchar",
+                "length": 255,
                 "decimals": -2147483648,
                 "isUnsigned": false,
                 "isZeroFill": false,
@@ -686,10 +1612,10 @@
                 "objectType": "TableField_MYSQL",
                 "name": "zapelnienie",
                 "type": "int",
-                "length": 10,
+                "length": -2147483648,
                 "decimals": -2147483648,
-                "isUnsigned": true,
-                "isZeroFill": true,
+                "isUnsigned": false,
+                "isZeroFill": false,
                 "setEnumValues": "",
                 "isBinary": false,
                 "charset": "",
@@ -733,12 +1659,12 @@
           },
           {
             "objectType": "Table_MYSQL",
-            "name": "premia",
+            "name": "pracownik",
             "comment": "",
             "engine": "InnoDB",
             "characterSet": "utf8mb4",
             "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 11,
+            "autoIncrement": 3,
             "tablespace": "",
             "storage": "",
             "insertMethod": "",
@@ -760,18 +1686,18 @@
             "pageCheckSum": false,
             "transactional": false,
             "compression": "",
-            "oldName": "premia",
+            "oldName": "pracownik",
             "encryption": false,
             "createOptions": "",
-            "createTime": "2024-11-21 18:28:34",
+            "createTime": "2024-12-19 20:00:23",
             "checkTime": "",
             "dataFree": 0,
             "dataLength": 16384,
-            "indexLength": 16384,
+            "indexLength": 0,
             "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `premia` (\n  `id_premia` int NOT NULL AUTO_INCREMENT,\n  `kwota` float DEFAULT NULL,\n  `id_pracownik` int DEFAULT NULL,\n  PRIMARY KEY (`id_premia`),\n  KEY `fk_premia_pracowicy_1` (`id_pracownik`),\n  CONSTRAINT `fk_premia_pracowicy_1` FOREIGN KEY (`id_pracownik`) REFERENCES `pracownicy` (`id_pracownik`)\n) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "rows": 2,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `pracownik` (\n  `id_pracownik` int NOT NULL AUTO_INCREMENT,\n  `imie` varchar(255) NOT NULL,\n  `nazwisko` varchar(255) NOT NULL,\n  `pesel` varchar(11) NOT NULL,\n  `login` varchar(255) NOT NULL,\n  `haslo` varchar(255) NOT NULL,\n  `wynagrodzenie` float NOT NULL,\n  PRIMARY KEY (`id_pracownik`)\n) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
             "partitionBy": "",
             "partitionByExpr": "",
             "partitions": 0,
@@ -783,7 +1709,7 @@
             "fields": [
               {
                 "objectType": "TableField_MYSQL",
-                "name": "id_premia",
+                "name": "id_pracownik",
                 "type": "int",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -805,22 +1731,22 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "id_premia"
+                "oldName": "id_pracownik"
               },
               {
                 "objectType": "TableField_MYSQL",
-                "name": "kwota",
-                "type": "float",
-                "length": -2147483648,
+                "name": "imie",
+                "type": "varchar",
+                "length": 255,
                 "decimals": -2147483648,
                 "isUnsigned": false,
                 "isZeroFill": false,
                 "setEnumValues": "",
                 "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": true,
-                "defaultType": "Null",
+                "charset": "utf8mb4",
+                "collation": "utf8mb4_0900_ai_ci",
+                "isNullable": false,
+                "defaultType": "Others",
                 "defaultValue": "",
                 "isOnUpdateCurrentTimestamp": false,
                 "isAutoInc": false,
@@ -831,7 +1757,236 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "kwota"
+                "oldName": "imie"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "nazwisko",
+                "type": "varchar",
+                "length": 255,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "utf8mb4",
+                "collation": "utf8mb4_0900_ai_ci",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "nazwisko"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "pesel",
+                "type": "varchar",
+                "length": 11,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "utf8mb4",
+                "collation": "utf8mb4_0900_ai_ci",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "pesel"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "login",
+                "type": "varchar",
+                "length": 255,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "utf8mb4",
+                "collation": "utf8mb4_0900_ai_ci",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "login"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "haslo",
+                "type": "varchar",
+                "length": 255,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "utf8mb4",
+                "collation": "utf8mb4_0900_ai_ci",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "haslo"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "wynagrodzenie",
+                "type": "float",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "wynagrodzenie"
+              }
+            ],
+            "indexes": [],
+            "primaryKey": {
+              "objectType": "PrimaryKey_MYSQL",
+              "name": "",
+              "fields": [
+                {
+                  "objectType": "IndexField_MYSQL",
+                  "name": "id_pracownik",
+                  "keyLength": 0,
+                  "order": "",
+                  "oldName": "id_pracownik"
+                }
+              ],
+              "oldName": "",
+              "indexMethod": "BTREE",
+              "comment": ""
+            },
+            "foreignKeys": [],
+            "checks": [],
+            "triggers": [],
+            "tablePartitions": []
+          },
+          {
+            "objectType": "Table_MYSQL",
+            "name": "pracownik_stanowisko",
+            "comment": "",
+            "engine": "InnoDB",
+            "characterSet": "utf8mb4",
+            "collation": "utf8mb4_0900_ai_ci",
+            "autoIncrement": 3,
+            "tablespace": "",
+            "storage": "",
+            "insertMethod": "",
+            "connection": "",
+            "checksum": false,
+            "rowFormat": "Dynamic",
+            "avgRowLength": 0,
+            "maxRows": 0,
+            "minRows": 0,
+            "keyBlockSize": 0,
+            "packKeys": "",
+            "delayKeyWrite": false,
+            "dataDirectory": "",
+            "indexDirectory": "",
+            "statsAutoRecalc": "",
+            "statsPersistent": "",
+            "statsSamplePages": 0,
+            "union": "",
+            "pageCheckSum": false,
+            "transactional": false,
+            "compression": "",
+            "oldName": "pracownik_stanowisko",
+            "encryption": false,
+            "createOptions": "",
+            "createTime": "2024-12-19 20:00:24",
+            "checkTime": "",
+            "dataFree": 0,
+            "dataLength": 16384,
+            "indexLength": 32768,
+            "maxDataLength": 0,
+            "rows": 2,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `pracownik_stanowisko` (\n  `id_pracownik_stanowisko` int NOT NULL AUTO_INCREMENT,\n  `id_pracownik` int NOT NULL,\n  `id_stanowisko` int NOT NULL,\n  PRIMARY KEY (`id_pracownik_stanowisko`),\n  KEY `pracownik_stanowisko_ibfk_1` (`id_pracownik`),\n  KEY `pracownik_stanowisko_ibfk_2` (`id_stanowisko`),\n  CONSTRAINT `pracownik_stanowisko_ibfk_1` FOREIGN KEY (`id_pracownik`) REFERENCES `pracownik` (`id_pracownik`) ON DELETE RESTRICT ON UPDATE RESTRICT,\n  CONSTRAINT `pracownik_stanowisko_ibfk_2` FOREIGN KEY (`id_stanowisko`) REFERENCES `stanowisko` (`id_stanowisko`) ON DELETE RESTRICT ON UPDATE RESTRICT\n) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "partitionBy": "",
+            "partitionByExpr": "",
+            "partitions": 0,
+            "partitionKeyAlgorithm": "",
+            "subPartitionBy": "",
+            "subPartitionByExpr": "",
+            "subPartitions": 0,
+            "subPartitionKeyAlgorithm": "",
+            "fields": [
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_pracownik_stanowisko",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": true,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_pracownik_stanowisko"
               },
               {
                 "objectType": "TableField_MYSQL",
@@ -845,8 +2000,8 @@
                 "isBinary": false,
                 "charset": "",
                 "collation": "",
-                "isNullable": true,
-                "defaultType": "Null",
+                "isNullable": false,
+                "defaultType": "Others",
                 "defaultValue": "",
                 "isOnUpdateCurrentTimestamp": false,
                 "isAutoInc": false,
@@ -858,23 +2013,49 @@
                 "virtualExpr": "",
                 "virtualType": "",
                 "oldName": "id_pracownik"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_stanowisko",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_stanowisko"
               }
             ],
             "indexes": [
               {
                 "objectType": "Index_MYSQL",
-                "name": "fk_premia_pracowicy_1",
+                "name": "pracownik_stanowisko_ibfk_1",
                 "type": "NORMAL",
                 "method": "BTREE",
                 "comment": "",
-                "oldName": "fk_premia_pracowicy_1",
+                "oldName": "pracownik_stanowisko_ibfk_1",
                 "online": false,
                 "keyBlockSize": 0,
                 "parser": "",
                 "algorithm": "",
                 "lock": "",
                 "collation": "A",
-                "cardinality": "10",
+                "cardinality": "2",
                 "packed": "",
                 "IsVisibleIndex": true,
                 "fields": [
@@ -886,6 +2067,32 @@
                     "oldName": "id_pracownik"
                   }
                 ]
+              },
+              {
+                "objectType": "Index_MYSQL",
+                "name": "pracownik_stanowisko_ibfk_2",
+                "type": "NORMAL",
+                "method": "BTREE",
+                "comment": "",
+                "oldName": "pracownik_stanowisko_ibfk_2",
+                "online": false,
+                "keyBlockSize": 0,
+                "parser": "",
+                "algorithm": "",
+                "lock": "",
+                "collation": "A",
+                "cardinality": "2",
+                "packed": "",
+                "IsVisibleIndex": true,
+                "fields": [
+                  {
+                    "objectType": "IndexField_MYSQL",
+                    "name": "id_stanowisko",
+                    "keyLength": 0,
+                    "order": "ASC",
+                    "oldName": "id_stanowisko"
+                  }
+                ]
               }
             ],
             "primaryKey": {
@@ -894,10 +2101,10 @@
               "fields": [
                 {
                   "objectType": "IndexField_MYSQL",
-                  "name": "id_premia",
+                  "name": "id_pracownik_stanowisko",
                   "keyLength": 0,
                   "order": "",
-                  "oldName": "id_premia"
+                  "oldName": "id_pracownik_stanowisko"
                 }
               ],
               "oldName": "",
@@ -907,7 +2114,7 @@
             "foreignKeys": [
               {
                 "objectType": "ForeignKey_MYSQL",
-                "name": "fk_premia_pracowicy_1",
+                "name": "pracownik_stanowisko_ibfk_1",
                 "fields": [
                   "id_pracownik"
                 ],
@@ -919,8 +2126,25 @@
                 "onDelete": "RESTRICT",
                 "onUpdate": "RESTRICT",
                 "sourceCardinality": "ZeroOrManyRelationship",
-                "targetCardinality": "ZeroOrOneRelationship",
-                "oldName": "fk_premia_pracowicy_1"
+                "targetCardinality": "OneAndOnlyOneRelationship",
+                "oldName": "pracownik_stanowisko_ibfk_1"
+              },
+              {
+                "objectType": "ForeignKey_MYSQL",
+                "name": "pracownik_stanowisko_ibfk_2",
+                "fields": [
+                  "id_stanowisko"
+                ],
+                "referenceSchema": "osiedlowy_sklep_spozywczy",
+                "referenceTable": "stanowisko",
+                "referenceFields": [
+                  "id_stanowisko"
+                ],
+                "onDelete": "RESTRICT",
+                "onUpdate": "RESTRICT",
+                "sourceCardinality": "ZeroOrManyRelationship",
+                "targetCardinality": "OneAndOnlyOneRelationship",
+                "oldName": "pracownik_stanowisko_ibfk_2"
               }
             ],
             "checks": [],
@@ -929,12 +2153,12 @@
           },
           {
             "objectType": "Table_MYSQL",
-            "name": "przedmiotwkoszyku",
+            "name": "producent",
             "comment": "",
             "engine": "InnoDB",
             "characterSet": "utf8mb4",
             "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 11,
+            "autoIncrement": 4,
             "tablespace": "",
             "storage": "",
             "insertMethod": "",
@@ -956,18 +2180,18 @@
             "pageCheckSum": false,
             "transactional": false,
             "compression": "",
-            "oldName": "przedmiotwkoszyku",
+            "oldName": "producent",
             "encryption": false,
             "createOptions": "",
-            "createTime": "2024-11-21 18:28:34",
+            "createTime": "2024-12-19 20:00:24",
             "checkTime": "",
             "dataFree": 0,
             "dataLength": 16384,
             "indexLength": 16384,
             "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `przedmiotwkoszyku` (\n  `id_przedmiotwkoszyku` int NOT NULL AUTO_INCREMENT,\n  `ilosc` int NOT NULL,\n  `id_stanproduktow` int NOT NULL,\n  PRIMARY KEY (`id_przedmiotwkoszyku`),\n  KEY `fk_przedmiotWKoszyku_stanProduktów_1` (`id_stanproduktow`),\n  CONSTRAINT `fk_przedmiotWKoszyku_stanProduktów_1` FOREIGN KEY (`id_stanproduktow`) REFERENCES `stanproduktów` (`id_stanproduktow`)\n) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "rows": 3,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `producent` (\n  `id_producent` int NOT NULL AUTO_INCREMENT,\n  `nazwa` varchar(255) NOT NULL,\n  `adres` varchar(255) NOT NULL,\n  `id_kraj_producenta` int DEFAULT NULL,\n  PRIMARY KEY (`id_producent`),\n  KEY `producent_ibfk_1` (`id_kraj_producenta`),\n  CONSTRAINT `producent_ibfk_1` FOREIGN KEY (`id_kraj_producenta`) REFERENCES `kraj_producenta` (`id_kraj_producenta`) ON DELETE SET NULL ON UPDATE RESTRICT\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
             "partitionBy": "",
             "partitionByExpr": "",
             "partitions": 0,
@@ -979,7 +2203,7 @@
             "fields": [
               {
                 "objectType": "TableField_MYSQL",
-                "name": "id_przedmiotwkoszyku",
+                "name": "id_producent",
                 "type": "int",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -1001,7 +2225,229 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "id_przedmiotwkoszyku"
+                "oldName": "id_producent"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "nazwa",
+                "type": "varchar",
+                "length": 255,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "utf8mb4",
+                "collation": "utf8mb4_0900_ai_ci",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "nazwa"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "adres",
+                "type": "varchar",
+                "length": 255,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "utf8mb4",
+                "collation": "utf8mb4_0900_ai_ci",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "adres"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_kraj_producenta",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": true,
+                "defaultType": "Null",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_kraj_producenta"
+              }
+            ],
+            "indexes": [
+              {
+                "objectType": "Index_MYSQL",
+                "name": "producent_ibfk_1",
+                "type": "NORMAL",
+                "method": "BTREE",
+                "comment": "",
+                "oldName": "producent_ibfk_1",
+                "online": false,
+                "keyBlockSize": 0,
+                "parser": "",
+                "algorithm": "",
+                "lock": "",
+                "collation": "A",
+                "cardinality": "3",
+                "packed": "",
+                "IsVisibleIndex": true,
+                "fields": [
+                  {
+                    "objectType": "IndexField_MYSQL",
+                    "name": "id_kraj_producenta",
+                    "keyLength": 0,
+                    "order": "ASC",
+                    "oldName": "id_kraj_producenta"
+                  }
+                ]
+              }
+            ],
+            "primaryKey": {
+              "objectType": "PrimaryKey_MYSQL",
+              "name": "",
+              "fields": [
+                {
+                  "objectType": "IndexField_MYSQL",
+                  "name": "id_producent",
+                  "keyLength": 0,
+                  "order": "",
+                  "oldName": "id_producent"
+                }
+              ],
+              "oldName": "",
+              "indexMethod": "BTREE",
+              "comment": ""
+            },
+            "foreignKeys": [
+              {
+                "objectType": "ForeignKey_MYSQL",
+                "name": "producent_ibfk_1",
+                "fields": [
+                  "id_kraj_producenta"
+                ],
+                "referenceSchema": "osiedlowy_sklep_spozywczy",
+                "referenceTable": "kraj_producenta",
+                "referenceFields": [
+                  "id_kraj_producenta"
+                ],
+                "onDelete": "SET NULL",
+                "onUpdate": "RESTRICT",
+                "sourceCardinality": "ZeroOrManyRelationship",
+                "targetCardinality": "ZeroOrOneRelationship",
+                "oldName": "producent_ibfk_1"
+              }
+            ],
+            "checks": [],
+            "triggers": [],
+            "tablePartitions": []
+          },
+          {
+            "objectType": "Table_MYSQL",
+            "name": "przedmiot_w_koszyku",
+            "comment": "",
+            "engine": "InnoDB",
+            "characterSet": "utf8mb4",
+            "collation": "utf8mb4_0900_ai_ci",
+            "autoIncrement": 3,
+            "tablespace": "",
+            "storage": "",
+            "insertMethod": "",
+            "connection": "",
+            "checksum": false,
+            "rowFormat": "Dynamic",
+            "avgRowLength": 0,
+            "maxRows": 0,
+            "minRows": 0,
+            "keyBlockSize": 0,
+            "packKeys": "",
+            "delayKeyWrite": false,
+            "dataDirectory": "",
+            "indexDirectory": "",
+            "statsAutoRecalc": "",
+            "statsPersistent": "",
+            "statsSamplePages": 0,
+            "union": "",
+            "pageCheckSum": false,
+            "transactional": false,
+            "compression": "",
+            "oldName": "przedmiot_w_koszyku",
+            "encryption": false,
+            "createOptions": "",
+            "createTime": "2024-12-19 20:00:24",
+            "checkTime": "",
+            "dataFree": 0,
+            "dataLength": 16384,
+            "indexLength": 16384,
+            "maxDataLength": 0,
+            "rows": 2,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `przedmiot_w_koszyku` (\n  `id_przedmiot_w_koszyku` int NOT NULL AUTO_INCREMENT,\n  `ilosc` int NOT NULL,\n  `id_stan_produktow` int NOT NULL,\n  PRIMARY KEY (`id_przedmiot_w_koszyku`),\n  KEY `przedmiot_w_koszyku_ibfk_1` (`id_stan_produktow`),\n  CONSTRAINT `przedmiot_w_koszyku_ibfk_1` FOREIGN KEY (`id_stan_produktow`) REFERENCES `stan_produktow` (`id_stan_produktow`) ON DELETE RESTRICT ON UPDATE RESTRICT\n) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "partitionBy": "",
+            "partitionByExpr": "",
+            "partitions": 0,
+            "partitionKeyAlgorithm": "",
+            "subPartitionBy": "",
+            "subPartitionByExpr": "",
+            "subPartitions": 0,
+            "subPartitionKeyAlgorithm": "",
+            "fields": [
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_przedmiot_w_koszyku",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": true,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_przedmiot_w_koszyku"
               },
               {
                 "objectType": "TableField_MYSQL",
@@ -1031,7 +2477,7 @@
               },
               {
                 "objectType": "TableField_MYSQL",
-                "name": "id_stanproduktow",
+                "name": "id_stan_produktow",
                 "type": "int",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -1053,33 +2499,33 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "id_stanproduktow"
+                "oldName": "id_stan_produktow"
               }
             ],
             "indexes": [
               {
                 "objectType": "Index_MYSQL",
-                "name": "fk_przedmiotWKoszyku_stanProduktów_1",
+                "name": "przedmiot_w_koszyku_ibfk_1",
                 "type": "NORMAL",
                 "method": "BTREE",
                 "comment": "",
-                "oldName": "fk_przedmiotWKoszyku_stanProduktów_1",
+                "oldName": "przedmiot_w_koszyku_ibfk_1",
                 "online": false,
                 "keyBlockSize": 0,
                 "parser": "",
                 "algorithm": "",
                 "lock": "",
                 "collation": "A",
-                "cardinality": "10",
+                "cardinality": "2",
                 "packed": "",
                 "IsVisibleIndex": true,
                 "fields": [
                   {
                     "objectType": "IndexField_MYSQL",
-                    "name": "id_stanproduktow",
+                    "name": "id_stan_produktow",
                     "keyLength": 0,
                     "order": "ASC",
-                    "oldName": "id_stanproduktow"
+                    "oldName": "id_stan_produktow"
                   }
                 ]
               }
@@ -1090,10 +2536,10 @@
               "fields": [
                 {
                   "objectType": "IndexField_MYSQL",
-                  "name": "id_przedmiotwkoszyku",
+                  "name": "id_przedmiot_w_koszyku",
                   "keyLength": 0,
                   "order": "",
-                  "oldName": "id_przedmiotwkoszyku"
+                  "oldName": "id_przedmiot_w_koszyku"
                 }
               ],
               "oldName": "",
@@ -1103,20 +2549,20 @@
             "foreignKeys": [
               {
                 "objectType": "ForeignKey_MYSQL",
-                "name": "fk_przedmiotWKoszyku_stanProduktów_1",
+                "name": "przedmiot_w_koszyku_ibfk_1",
                 "fields": [
-                  "id_stanproduktow"
+                  "id_stan_produktow"
                 ],
                 "referenceSchema": "osiedlowy_sklep_spozywczy",
-                "referenceTable": "stanproduktów",
+                "referenceTable": "stan_produktow",
                 "referenceFields": [
-                  "id_stanproduktow"
+                  "id_stan_produktow"
                 ],
                 "onDelete": "RESTRICT",
                 "onUpdate": "RESTRICT",
                 "sourceCardinality": "ZeroOrManyRelationship",
                 "targetCardinality": "OneAndOnlyOneRelationship",
-                "oldName": "fk_przedmiotWKoszyku_stanProduktów_1"
+                "oldName": "przedmiot_w_koszyku_ibfk_1"
               }
             ],
             "checks": [],
@@ -1125,12 +2571,12 @@
           },
           {
             "objectType": "Table_MYSQL",
-            "name": "stanproduktów",
+            "name": "rodzaj_tranzakcji",
             "comment": "",
             "engine": "InnoDB",
             "characterSet": "utf8mb4",
             "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 11,
+            "autoIncrement": 3,
             "tablespace": "",
             "storage": "",
             "insertMethod": "",
@@ -1152,18 +2598,18 @@
             "pageCheckSum": false,
             "transactional": false,
             "compression": "",
-            "oldName": "stanproduktów",
+            "oldName": "rodzaj_tranzakcji",
             "encryption": false,
             "createOptions": "",
-            "createTime": "2024-11-21 18:28:34",
+            "createTime": "2024-12-19 20:00:23",
             "checkTime": "",
             "dataFree": 0,
             "dataLength": 16384,
-            "indexLength": 32768,
+            "indexLength": 0,
             "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `stanproduktów` (\n  `id_stanproduktow` int NOT NULL AUTO_INCREMENT,\n  `dataWaznosci` date NOT NULL,\n  `ilosc` int NOT NULL,\n  `id_daneproduktow` int NOT NULL,\n  `id_magazyn` int NOT NULL,\n  PRIMARY KEY (`id_stanproduktow`),\n  KEY `fk_stanProduktów_daneProduktów_1` (`id_daneproduktow`),\n  KEY `fk_stanProduktów_magazyn_1` (`id_magazyn`),\n  CONSTRAINT `fk_stanProduktów_daneProduktów_1` FOREIGN KEY (`id_daneproduktow`) REFERENCES `daneproduktów` (`id_daneproduktow`),\n  CONSTRAINT `fk_stanProduktów_magazyn_1` FOREIGN KEY (`id_magazyn`) REFERENCES `magazyn` (`id_magazyn`)\n) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "rows": 2,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `rodzaj_tranzakcji` (\n  `id_rodzaj_tranzakcji` int NOT NULL AUTO_INCREMENT,\n  `nazwa` varchar(255) NOT NULL,\n  PRIMARY KEY (`id_rodzaj_tranzakcji`)\n) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
             "partitionBy": "",
             "partitionByExpr": "",
             "partitions": 0,
@@ -1175,7 +2621,7 @@
             "fields": [
               {
                 "objectType": "TableField_MYSQL",
-                "name": "id_stanproduktow",
+                "name": "id_rodzaj_tranzakcji",
                 "type": "int",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -1197,11 +2643,136 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "id_stanproduktow"
+                "oldName": "id_rodzaj_tranzakcji"
               },
               {
                 "objectType": "TableField_MYSQL",
-                "name": "dataWaznosci",
+                "name": "nazwa",
+                "type": "varchar",
+                "length": 255,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "utf8mb4",
+                "collation": "utf8mb4_0900_ai_ci",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "nazwa"
+              }
+            ],
+            "indexes": [],
+            "primaryKey": {
+              "objectType": "PrimaryKey_MYSQL",
+              "name": "",
+              "fields": [
+                {
+                  "objectType": "IndexField_MYSQL",
+                  "name": "id_rodzaj_tranzakcji",
+                  "keyLength": 0,
+                  "order": "",
+                  "oldName": "id_rodzaj_tranzakcji"
+                }
+              ],
+              "oldName": "",
+              "indexMethod": "BTREE",
+              "comment": ""
+            },
+            "foreignKeys": [],
+            "checks": [],
+            "triggers": [],
+            "tablePartitions": []
+          },
+          {
+            "objectType": "Table_MYSQL",
+            "name": "stan_produktow",
+            "comment": "",
+            "engine": "InnoDB",
+            "characterSet": "utf8mb4",
+            "collation": "utf8mb4_0900_ai_ci",
+            "autoIncrement": 4,
+            "tablespace": "",
+            "storage": "",
+            "insertMethod": "",
+            "connection": "",
+            "checksum": false,
+            "rowFormat": "Dynamic",
+            "avgRowLength": 0,
+            "maxRows": 0,
+            "minRows": 0,
+            "keyBlockSize": 0,
+            "packKeys": "",
+            "delayKeyWrite": false,
+            "dataDirectory": "",
+            "indexDirectory": "",
+            "statsAutoRecalc": "",
+            "statsPersistent": "",
+            "statsSamplePages": 0,
+            "union": "",
+            "pageCheckSum": false,
+            "transactional": false,
+            "compression": "",
+            "oldName": "stan_produktow",
+            "encryption": false,
+            "createOptions": "",
+            "createTime": "2024-12-19 20:00:24",
+            "checkTime": "",
+            "dataFree": 0,
+            "dataLength": 16384,
+            "indexLength": 32768,
+            "maxDataLength": 0,
+            "rows": 3,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `stan_produktow` (\n  `id_stan_produktow` int NOT NULL AUTO_INCREMENT,\n  `data_waznosci` date NOT NULL,\n  `ilosc` int NOT NULL,\n  `id_dane_produktow` int NOT NULL,\n  `id_magazyn` int NOT NULL,\n  PRIMARY KEY (`id_stan_produktow`),\n  KEY `stan_produktow_ibfk_1` (`id_dane_produktow`),\n  KEY `stan_produktow_ibfk_2` (`id_magazyn`),\n  CONSTRAINT `stan_produktow_ibfk_1` FOREIGN KEY (`id_dane_produktow`) REFERENCES `dane_produktow` (`id_dane_produktow`) ON DELETE RESTRICT ON UPDATE RESTRICT,\n  CONSTRAINT `stan_produktow_ibfk_2` FOREIGN KEY (`id_magazyn`) REFERENCES `magazyn` (`id_magazyn`) ON DELETE RESTRICT ON UPDATE RESTRICT\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "partitionBy": "",
+            "partitionByExpr": "",
+            "partitions": 0,
+            "partitionKeyAlgorithm": "",
+            "subPartitionBy": "",
+            "subPartitionByExpr": "",
+            "subPartitions": 0,
+            "subPartitionKeyAlgorithm": "",
+            "fields": [
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_stan_produktow",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": true,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_stan_produktow"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "data_waznosci",
                 "type": "date",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -1223,7 +2794,7 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "dataWaznosci"
+                "oldName": "data_waznosci"
               },
               {
                 "objectType": "TableField_MYSQL",
@@ -1253,7 +2824,7 @@
               },
               {
                 "objectType": "TableField_MYSQL",
-                "name": "id_daneproduktow",
+                "name": "id_dane_produktow",
                 "type": "int",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -1275,7 +2846,7 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "id_daneproduktow"
+                "oldName": "id_dane_produktow"
               },
               {
                 "objectType": "TableField_MYSQL",
@@ -1307,44 +2878,44 @@
             "indexes": [
               {
                 "objectType": "Index_MYSQL",
-                "name": "fk_stanProduktów_daneProduktów_1",
+                "name": "stan_produktow_ibfk_1",
                 "type": "NORMAL",
                 "method": "BTREE",
                 "comment": "",
-                "oldName": "fk_stanProduktów_daneProduktów_1",
+                "oldName": "stan_produktow_ibfk_1",
                 "online": false,
                 "keyBlockSize": 0,
                 "parser": "",
                 "algorithm": "",
                 "lock": "",
                 "collation": "A",
-                "cardinality": "10",
+                "cardinality": "3",
                 "packed": "",
                 "IsVisibleIndex": true,
                 "fields": [
                   {
                     "objectType": "IndexField_MYSQL",
-                    "name": "id_daneproduktow",
+                    "name": "id_dane_produktow",
                     "keyLength": 0,
                     "order": "ASC",
-                    "oldName": "id_daneproduktow"
+                    "oldName": "id_dane_produktow"
                   }
                 ]
               },
               {
                 "objectType": "Index_MYSQL",
-                "name": "fk_stanProduktów_magazyn_1",
+                "name": "stan_produktow_ibfk_2",
                 "type": "NORMAL",
                 "method": "BTREE",
                 "comment": "",
-                "oldName": "fk_stanProduktów_magazyn_1",
+                "oldName": "stan_produktow_ibfk_2",
                 "online": false,
                 "keyBlockSize": 0,
                 "parser": "",
                 "algorithm": "",
                 "lock": "",
                 "collation": "A",
-                "cardinality": "10",
+                "cardinality": "3",
                 "packed": "",
                 "IsVisibleIndex": true,
                 "fields": [
@@ -1364,10 +2935,10 @@
               "fields": [
                 {
                   "objectType": "IndexField_MYSQL",
-                  "name": "id_stanproduktow",
+                  "name": "id_stan_produktow",
                   "keyLength": 0,
                   "order": "",
-                  "oldName": "id_stanproduktow"
+                  "oldName": "id_stan_produktow"
                 }
               ],
               "oldName": "",
@@ -1377,24 +2948,24 @@
             "foreignKeys": [
               {
                 "objectType": "ForeignKey_MYSQL",
-                "name": "fk_stanProduktów_daneProduktów_1",
+                "name": "stan_produktow_ibfk_1",
                 "fields": [
-                  "id_daneproduktow"
+                  "id_dane_produktow"
                 ],
                 "referenceSchema": "osiedlowy_sklep_spozywczy",
-                "referenceTable": "daneproduktów",
+                "referenceTable": "dane_produktow",
                 "referenceFields": [
-                  "id_daneproduktow"
+                  "id_dane_produktow"
                 ],
                 "onDelete": "RESTRICT",
                 "onUpdate": "RESTRICT",
                 "sourceCardinality": "ZeroOrManyRelationship",
                 "targetCardinality": "OneAndOnlyOneRelationship",
-                "oldName": "fk_stanProduktów_daneProduktów_1"
+                "oldName": "stan_produktow_ibfk_1"
               },
               {
                 "objectType": "ForeignKey_MYSQL",
-                "name": "fk_stanProduktów_magazyn_1",
+                "name": "stan_produktow_ibfk_2",
                 "fields": [
                   "id_magazyn"
                 ],
@@ -1407,7 +2978,7 @@
                 "onUpdate": "RESTRICT",
                 "sourceCardinality": "ZeroOrManyRelationship",
                 "targetCardinality": "OneAndOnlyOneRelationship",
-                "oldName": "fk_stanProduktów_magazyn_1"
+                "oldName": "stan_produktow_ibfk_2"
               }
             ],
             "checks": [],
@@ -1416,12 +2987,12 @@
           },
           {
             "objectType": "Table_MYSQL",
-            "name": "tranzakcja",
+            "name": "stanowisko",
             "comment": "",
             "engine": "InnoDB",
             "characterSet": "utf8mb4",
             "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 0,
+            "autoIncrement": 3,
             "tablespace": "",
             "storage": "",
             "insertMethod": "",
@@ -1443,18 +3014,18 @@
             "pageCheckSum": false,
             "transactional": false,
             "compression": "",
-            "oldName": "tranzakcja",
+            "oldName": "stanowisko",
             "encryption": false,
             "createOptions": "",
-            "createTime": "2024-11-21 18:28:34",
+            "createTime": "2024-12-19 20:00:23",
             "checkTime": "",
             "dataFree": 0,
             "dataLength": 16384,
-            "indexLength": 32768,
+            "indexLength": 0,
             "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `tranzakcja` (\n  `id_tranzakcji` int NOT NULL,\n  `kwota` int NOT NULL,\n  `data` datetime NOT NULL,\n  `rodzajtranzakcji` text NOT NULL,\n  `czyfinalizacja` bit(1) NOT NULL,\n  `id_pracownik` int NOT NULL,\n  `id_dziennyutarg` int DEFAULT NULL,\n  PRIMARY KEY (`id_tranzakcji`),\n  KEY `fk_tranzakcja_pracowincy_1` (`id_pracownik`),\n  KEY `fk_tranzakcja_dziennyUtarg_1` (`id_dziennyutarg`),\n  CONSTRAINT `fk_tranzakcja_dziennyUtarg_1` FOREIGN KEY (`id_dziennyutarg`) REFERENCES `dziennyutarg` (`id_dziennyutarg`),\n  CONSTRAINT `fk_tranzakcja_pracowincy_1` FOREIGN KEY (`id_pracownik`) REFERENCES `pracownicy` (`id_pracownik`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "rows": 2,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `stanowisko` (\n  `id_stanowisko` int NOT NULL AUTO_INCREMENT,\n  `pozycja` varchar(255) NOT NULL,\n  PRIMARY KEY (`id_stanowisko`)\n) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
             "partitionBy": "",
             "partitionByExpr": "",
             "partitions": 0,
@@ -1466,7 +3037,7 @@
             "fields": [
               {
                 "objectType": "TableField_MYSQL",
-                "name": "id_tranzakcji",
+                "name": "id_stanowisko",
                 "type": "int",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -1480,6 +3051,32 @@
                 "defaultType": "Others",
                 "defaultValue": "",
                 "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": true,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_stanowisko"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "pozycja",
+                "type": "varchar",
+                "length": 255,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "utf8mb4",
+                "collation": "utf8mb4_0900_ai_ci",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
                 "isAutoInc": false,
                 "comment": "",
                 "columnFormat": "",
@@ -1488,12 +3085,111 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "id_tranzakcji"
+                "oldName": "pozycja"
+              }
+            ],
+            "indexes": [],
+            "primaryKey": {
+              "objectType": "PrimaryKey_MYSQL",
+              "name": "",
+              "fields": [
+                {
+                  "objectType": "IndexField_MYSQL",
+                  "name": "id_stanowisko",
+                  "keyLength": 0,
+                  "order": "",
+                  "oldName": "id_stanowisko"
+                }
+              ],
+              "oldName": "",
+              "indexMethod": "BTREE",
+              "comment": ""
+            },
+            "foreignKeys": [],
+            "checks": [],
+            "triggers": [],
+            "tablePartitions": []
+          },
+          {
+            "objectType": "Table_MYSQL",
+            "name": "transakcja",
+            "comment": "",
+            "engine": "InnoDB",
+            "characterSet": "utf8mb4",
+            "collation": "utf8mb4_0900_ai_ci",
+            "autoIncrement": 3,
+            "tablespace": "",
+            "storage": "",
+            "insertMethod": "",
+            "connection": "",
+            "checksum": false,
+            "rowFormat": "Dynamic",
+            "avgRowLength": 0,
+            "maxRows": 0,
+            "minRows": 0,
+            "keyBlockSize": 0,
+            "packKeys": "",
+            "delayKeyWrite": false,
+            "dataDirectory": "",
+            "indexDirectory": "",
+            "statsAutoRecalc": "",
+            "statsPersistent": "",
+            "statsSamplePages": 0,
+            "union": "",
+            "pageCheckSum": false,
+            "transactional": false,
+            "compression": "",
+            "oldName": "transakcja",
+            "encryption": false,
+            "createOptions": "",
+            "createTime": "2024-12-19 20:00:25",
+            "checkTime": "",
+            "dataFree": 0,
+            "dataLength": 16384,
+            "indexLength": 49152,
+            "maxDataLength": 0,
+            "rows": 2,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `transakcja` (\n  `id_transakcji` int NOT NULL AUTO_INCREMENT,\n  `kwota` float NOT NULL,\n  `data` datetime NOT NULL,\n  `czy_finalizacja` bit(1) NOT NULL,\n  `id_rodzaj_transakcji` int DEFAULT NULL,\n  `id_pracownik` int NOT NULL,\n  `id_koszyk` int NOT NULL,\n  PRIMARY KEY (`id_transakcji`),\n  KEY `transakcja_ibfk_1` (`id_pracownik`),\n  KEY `tranzakcja_ibfk_1` (`id_rodzaj_transakcji`),\n  KEY `trazakcja_ibfk_1` (`id_koszyk`),\n  CONSTRAINT `transakcja_ibfk_1` FOREIGN KEY (`id_pracownik`) REFERENCES `pracownik` (`id_pracownik`) ON DELETE RESTRICT ON UPDATE RESTRICT,\n  CONSTRAINT `tranzakcja_ibfk_1` FOREIGN KEY (`id_rodzaj_transakcji`) REFERENCES `rodzaj_tranzakcji` (`id_rodzaj_tranzakcji`) ON DELETE SET NULL ON UPDATE SET NULL,\n  CONSTRAINT `trazakcja_ibfk_1` FOREIGN KEY (`id_koszyk`) REFERENCES `koszyk` (`id_koszyk`) ON DELETE RESTRICT ON UPDATE RESTRICT\n) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "partitionBy": "",
+            "partitionByExpr": "",
+            "partitions": 0,
+            "partitionKeyAlgorithm": "",
+            "subPartitionBy": "",
+            "subPartitionByExpr": "",
+            "subPartitions": 0,
+            "subPartitionKeyAlgorithm": "",
+            "fields": [
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_transakcji",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": false,
+                "defaultType": "Others",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": true,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_transakcji"
               },
               {
                 "objectType": "TableField_MYSQL",
                 "name": "kwota",
-                "type": "int",
+                "type": "float",
                 "length": -2147483648,
                 "decimals": -2147483648,
                 "isUnsigned": false,
@@ -1544,33 +3240,7 @@
               },
               {
                 "objectType": "TableField_MYSQL",
-                "name": "rodzajtranzakcji",
-                "type": "text",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "utf8mb4",
-                "collation": "utf8mb4_0900_ai_ci",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "rodzajtranzakcji"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "czyfinalizacja",
+                "name": "czy_finalizacja",
                 "type": "bit",
                 "length": 1,
                 "decimals": -2147483648,
@@ -1592,7 +3262,33 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "czyfinalizacja"
+                "oldName": "czy_finalizacja"
+              },
+              {
+                "objectType": "TableField_MYSQL",
+                "name": "id_rodzaj_transakcji",
+                "type": "int",
+                "length": -2147483648,
+                "decimals": -2147483648,
+                "isUnsigned": false,
+                "isZeroFill": false,
+                "setEnumValues": "",
+                "isBinary": false,
+                "charset": "",
+                "collation": "",
+                "isNullable": true,
+                "defaultType": "Null",
+                "defaultValue": "",
+                "isOnUpdateCurrentTimestamp": false,
+                "isAutoInc": false,
+                "comment": "",
+                "columnFormat": "",
+                "storage": "",
+                "isVirtual": false,
+                "isGeneratedAlways": false,
+                "virtualExpr": "",
+                "virtualType": "",
+                "oldName": "id_rodzaj_transakcji"
               },
               {
                 "objectType": "TableField_MYSQL",
@@ -1622,7 +3318,7 @@
               },
               {
                 "objectType": "TableField_MYSQL",
-                "name": "id_dziennyutarg",
+                "name": "id_koszyk",
                 "type": "int",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -1632,8 +3328,8 @@
                 "isBinary": false,
                 "charset": "",
                 "collation": "",
-                "isNullable": true,
-                "defaultType": "Null",
+                "isNullable": false,
+                "defaultType": "Others",
                 "defaultValue": "",
                 "isOnUpdateCurrentTimestamp": false,
                 "isAutoInc": false,
@@ -1644,24 +3340,24 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "id_dziennyutarg"
+                "oldName": "id_koszyk"
               }
             ],
             "indexes": [
               {
                 "objectType": "Index_MYSQL",
-                "name": "fk_tranzakcja_pracowincy_1",
+                "name": "transakcja_ibfk_1",
                 "type": "NORMAL",
                 "method": "BTREE",
                 "comment": "",
-                "oldName": "fk_tranzakcja_pracowincy_1",
+                "oldName": "transakcja_ibfk_1",
                 "online": false,
                 "keyBlockSize": 0,
                 "parser": "",
                 "algorithm": "",
                 "lock": "",
                 "collation": "A",
-                "cardinality": "10",
+                "cardinality": "2",
                 "packed": "",
                 "IsVisibleIndex": true,
                 "fields": [
@@ -1676,27 +3372,53 @@
               },
               {
                 "objectType": "Index_MYSQL",
-                "name": "fk_tranzakcja_dziennyUtarg_1",
+                "name": "tranzakcja_ibfk_1",
                 "type": "NORMAL",
                 "method": "BTREE",
                 "comment": "",
-                "oldName": "fk_tranzakcja_dziennyUtarg_1",
+                "oldName": "tranzakcja_ibfk_1",
                 "online": false,
                 "keyBlockSize": 0,
                 "parser": "",
                 "algorithm": "",
                 "lock": "",
                 "collation": "A",
-                "cardinality": "10",
+                "cardinality": "2",
                 "packed": "",
                 "IsVisibleIndex": true,
                 "fields": [
                   {
                     "objectType": "IndexField_MYSQL",
-                    "name": "id_dziennyutarg",
+                    "name": "id_rodzaj_transakcji",
                     "keyLength": 0,
                     "order": "ASC",
-                    "oldName": "id_dziennyutarg"
+                    "oldName": "id_rodzaj_transakcji"
+                  }
+                ]
+              },
+              {
+                "objectType": "Index_MYSQL",
+                "name": "trazakcja_ibfk_1",
+                "type": "NORMAL",
+                "method": "BTREE",
+                "comment": "",
+                "oldName": "trazakcja_ibfk_1",
+                "online": false,
+                "keyBlockSize": 0,
+                "parser": "",
+                "algorithm": "",
+                "lock": "",
+                "collation": "A",
+                "cardinality": "2",
+                "packed": "",
+                "IsVisibleIndex": true,
+                "fields": [
+                  {
+                    "objectType": "IndexField_MYSQL",
+                    "name": "id_koszyk",
+                    "keyLength": 0,
+                    "order": "ASC",
+                    "oldName": "id_koszyk"
                   }
                 ]
               }
@@ -1707,10 +3429,10 @@
               "fields": [
                 {
                   "objectType": "IndexField_MYSQL",
-                  "name": "id_tranzakcji",
+                  "name": "id_transakcji",
                   "keyLength": 0,
                   "order": "",
-                  "oldName": "id_tranzakcji"
+                  "oldName": "id_transakcji"
                 }
               ],
               "oldName": "",
@@ -1720,7 +3442,7 @@
             "foreignKeys": [
               {
                 "objectType": "ForeignKey_MYSQL",
-                "name": "fk_tranzakcja_pracowincy_1",
+                "name": "transakcja_ibfk_1",
                 "fields": [
                   "id_pracownik"
                 ],
@@ -1733,669 +3455,41 @@
                 "onUpdate": "RESTRICT",
                 "sourceCardinality": "ZeroOrManyRelationship",
                 "targetCardinality": "OneAndOnlyOneRelationship",
-                "oldName": "fk_tranzakcja_pracowincy_1"
+                "oldName": "transakcja_ibfk_1"
               },
               {
                 "objectType": "ForeignKey_MYSQL",
-                "name": "fk_tranzakcja_dziennyUtarg_1",
+                "name": "tranzakcja_ibfk_1",
                 "fields": [
-                  "id_dziennyutarg"
+                  "id_rodzaj_transakcji"
                 ],
                 "referenceSchema": "osiedlowy_sklep_spozywczy",
-                "referenceTable": "dziennyutarg",
+                "referenceTable": "rodzaj_tranzakcji",
                 "referenceFields": [
-                  "id_dziennyutarg"
+                  "id_rodzaj_tranzakcji"
                 ],
-                "onDelete": "RESTRICT",
-                "onUpdate": "RESTRICT",
+                "onDelete": "SET NULL",
+                "onUpdate": "SET NULL",
                 "sourceCardinality": "ZeroOrManyRelationship",
                 "targetCardinality": "ZeroOrOneRelationship",
-                "oldName": "fk_tranzakcja_dziennyUtarg_1"
-              }
-            ],
-            "checks": [],
-            "triggers": [],
-            "tablePartitions": []
-          },
-          {
-            "objectType": "Table_MYSQL",
-            "name": "wynagrodzenie",
-            "comment": "",
-            "engine": "InnoDB",
-            "characterSet": "utf8mb4",
-            "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 11,
-            "tablespace": "",
-            "storage": "",
-            "insertMethod": "",
-            "connection": "",
-            "checksum": false,
-            "rowFormat": "Dynamic",
-            "avgRowLength": 0,
-            "maxRows": 0,
-            "minRows": 0,
-            "keyBlockSize": 0,
-            "packKeys": "",
-            "delayKeyWrite": false,
-            "dataDirectory": "",
-            "indexDirectory": "",
-            "statsAutoRecalc": "",
-            "statsPersistent": "",
-            "statsSamplePages": 0,
-            "union": "",
-            "pageCheckSum": false,
-            "transactional": false,
-            "compression": "",
-            "oldName": "wynagrodzenie",
-            "encryption": false,
-            "createOptions": "",
-            "createTime": "2024-11-21 18:28:33",
-            "checkTime": "",
-            "dataFree": 0,
-            "dataLength": 16384,
-            "indexLength": 0,
-            "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `wynagrodzenie` (\n  `id_wynagrodzenie` int NOT NULL AUTO_INCREMENT,\n  `wynagrodzenieNetto` int NOT NULL,\n  `wynagrodzenieBrutto` int NOT NULL,\n  `koszt_zatrudnienia` int NOT NULL,\n  PRIMARY KEY (`id_wynagrodzenie`)\n) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
-            "partitionBy": "",
-            "partitionByExpr": "",
-            "partitions": 0,
-            "partitionKeyAlgorithm": "",
-            "subPartitionBy": "",
-            "subPartitionByExpr": "",
-            "subPartitions": 0,
-            "subPartitionKeyAlgorithm": "",
-            "fields": [
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "id_wynagrodzenie",
-                "type": "int",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": true,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "id_wynagrodzenie"
+                "oldName": "tranzakcja_ibfk_1"
               },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "wynagrodzenieNetto",
-                "type": "int",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "wynagrodzenieNetto"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "wynagrodzenieBrutto",
-                "type": "int",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "wynagrodzenieBrutto"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "koszt_zatrudnienia",
-                "type": "int",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "koszt_zatrudnienia"
-              }
-            ],
-            "indexes": [],
-            "primaryKey": {
-              "objectType": "PrimaryKey_MYSQL",
-              "name": "",
-              "fields": [
-                {
-                  "objectType": "IndexField_MYSQL",
-                  "name": "id_wynagrodzenie",
-                  "keyLength": 0,
-                  "order": "",
-                  "oldName": "id_wynagrodzenie"
-                }
-              ],
-              "oldName": "",
-              "indexMethod": "BTREE",
-              "comment": ""
-            },
-            "foreignKeys": [],
-            "checks": [],
-            "triggers": [],
-            "tablePartitions": []
-          },
-          {
-            "objectType": "Table_MYSQL",
-            "name": "pracownik",
-            "comment": "",
-            "engine": "InnoDB",
-            "characterSet": "utf8mb4",
-            "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 11,
-            "tablespace": "",
-            "storage": "",
-            "insertMethod": "",
-            "connection": "",
-            "checksum": false,
-            "rowFormat": "Dynamic",
-            "avgRowLength": 0,
-            "maxRows": 0,
-            "minRows": 0,
-            "keyBlockSize": 0,
-            "packKeys": "",
-            "delayKeyWrite": false,
-            "dataDirectory": "",
-            "indexDirectory": "",
-            "statsAutoRecalc": "",
-            "statsPersistent": "",
-            "statsSamplePages": 0,
-            "union": "",
-            "pageCheckSum": false,
-            "transactional": false,
-            "compression": "",
-            "oldName": "pracownicy",
-            "encryption": false,
-            "createOptions": "",
-            "createTime": "2024-11-21 18:28:33",
-            "checkTime": "",
-            "dataFree": 0,
-            "dataLength": 16384,
-            "indexLength": 0,
-            "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `pracownicy` (\n  `id_pracownik` int NOT NULL AUTO_INCREMENT,\n  `imie` text NOT NULL,\n  `nazwisko` text NOT NULL,\n  `pesel` text,\n  PRIMARY KEY (`id_pracownik`)\n) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
-            "partitionBy": "",
-            "partitionByExpr": "",
-            "partitions": 0,
-            "partitionKeyAlgorithm": "",
-            "subPartitionBy": "",
-            "subPartitionByExpr": "",
-            "subPartitions": 0,
-            "subPartitionKeyAlgorithm": "",
-            "fields": [
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "id_pracownik",
-                "type": "int",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": true,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "id_pracownik"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "imie",
-                "type": "text",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "utf8mb4",
-                "collation": "utf8mb4_0900_ai_ci",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "imie"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "nazwisko",
-                "type": "text",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "utf8mb4",
-                "collation": "utf8mb4_0900_ai_ci",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "nazwisko"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "pesel",
-                "type": "text",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "utf8mb4",
-                "collation": "utf8mb4_0900_ai_ci",
-                "isNullable": true,
-                "defaultType": "Null",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "pesel"
-              }
-            ],
-            "indexes": [],
-            "primaryKey": {
-              "objectType": "PrimaryKey_MYSQL",
-              "name": "",
-              "fields": [
-                {
-                  "objectType": "IndexField_MYSQL",
-                  "name": "id_pracownik",
-                  "keyLength": 0,
-                  "order": "",
-                  "oldName": "id_pracownik"
-                }
-              ],
-              "oldName": "",
-              "indexMethod": "BTREE",
-              "comment": ""
-            },
-            "foreignKeys": [],
-            "checks": [],
-            "triggers": [],
-            "tablePartitions": []
-          },
-          {
-            "objectType": "Table_MYSQL",
-            "name": "daneproduktów",
-            "comment": "",
-            "engine": "InnoDB",
-            "characterSet": "utf8mb4",
-            "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 11,
-            "tablespace": "",
-            "storage": "",
-            "insertMethod": "",
-            "connection": "",
-            "checksum": false,
-            "rowFormat": "Dynamic",
-            "avgRowLength": 0,
-            "maxRows": 0,
-            "minRows": 0,
-            "keyBlockSize": 0,
-            "packKeys": "",
-            "delayKeyWrite": false,
-            "dataDirectory": "",
-            "indexDirectory": "",
-            "statsAutoRecalc": "",
-            "statsPersistent": "",
-            "statsSamplePages": 0,
-            "union": "",
-            "pageCheckSum": false,
-            "transactional": false,
-            "compression": "",
-            "oldName": "daneproduktów",
-            "encryption": false,
-            "createOptions": "",
-            "createTime": "2024-11-21 18:28:34",
-            "checkTime": "",
-            "dataFree": 0,
-            "dataLength": 16384,
-            "indexLength": 32768,
-            "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `daneproduktów` (\n  `id_daneproduktow` int NOT NULL AUTO_INCREMENT,\n  `nazwa` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,\n  `VAT` float NOT NULL,\n  `id_kategoria` int NOT NULL,\n  `id_ceny` int DEFAULT NULL,\n  PRIMARY KEY (`id_daneproduktow`),\n  KEY `fk_daneProduktów_kategoria_1` (`id_kategoria`),\n  KEY `fk_daneProduktów_ceny_1` (`id_ceny`),\n  CONSTRAINT `fk_daneProduktów_ceny_1` FOREIGN KEY (`id_ceny`) REFERENCES `ceny` (`id_ceny`),\n  CONSTRAINT `fk_daneProduktów_kategoria_1` FOREIGN KEY (`id_kategoria`) REFERENCES `kategoria` (`id_kategoria`)\n) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
-            "partitionBy": "",
-            "partitionByExpr": "",
-            "partitions": 0,
-            "partitionKeyAlgorithm": "",
-            "subPartitionBy": "",
-            "subPartitionByExpr": "",
-            "subPartitions": 0,
-            "subPartitionKeyAlgorithm": "",
-            "fields": [
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "id_daneproduktow",
-                "type": "int",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": true,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "id_daneproduktow"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "nazwa",
-                "type": "text",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "utf8mb3",
-                "collation": "utf8mb3_general_ci",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "nazwa"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "VAT",
-                "type": "float",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "VAT"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "id_kategoria",
-                "type": "int",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "id_kategoria"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "id_ceny",
-                "type": "int",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": true,
-                "defaultType": "Null",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "id_ceny"
-              }
-            ],
-            "indexes": [
-              {
-                "objectType": "Index_MYSQL",
-                "name": "fk_daneProduktów_kategoria_1",
-                "type": "NORMAL",
-                "method": "BTREE",
-                "comment": "",
-                "oldName": "fk_daneProduktów_kategoria_1",
-                "online": false,
-                "keyBlockSize": 0,
-                "parser": "",
-                "algorithm": "",
-                "lock": "",
-                "collation": "A",
-                "cardinality": "10",
-                "packed": "",
-                "IsVisibleIndex": true,
-                "fields": [
-                  {
-                    "objectType": "IndexField_MYSQL",
-                    "name": "id_kategoria",
-                    "keyLength": 0,
-                    "order": "ASC",
-                    "oldName": "id_kategoria"
-                  }
-                ]
-              },
-              {
-                "objectType": "Index_MYSQL",
-                "name": "fk_daneProduktów_ceny_1",
-                "type": "NORMAL",
-                "method": "BTREE",
-                "comment": "",
-                "oldName": "fk_daneProduktów_ceny_1",
-                "online": false,
-                "keyBlockSize": 0,
-                "parser": "",
-                "algorithm": "",
-                "lock": "",
-                "collation": "A",
-                "cardinality": "10",
-                "packed": "",
-                "IsVisibleIndex": true,
-                "fields": [
-                  {
-                    "objectType": "IndexField_MYSQL",
-                    "name": "id_ceny",
-                    "keyLength": 0,
-                    "order": "ASC",
-                    "oldName": "id_ceny"
-                  }
-                ]
-              }
-            ],
-            "primaryKey": {
-              "objectType": "PrimaryKey_MYSQL",
-              "name": "",
-              "fields": [
-                {
-                  "objectType": "IndexField_MYSQL",
-                  "name": "id_daneproduktow",
-                  "keyLength": 0,
-                  "order": "",
-                  "oldName": "id_daneproduktow"
-                }
-              ],
-              "oldName": "",
-              "indexMethod": "BTREE",
-              "comment": ""
-            },
-            "foreignKeys": [
               {
                 "objectType": "ForeignKey_MYSQL",
-                "name": "fk_daneProduktów_kategoria_1",
+                "name": "trazakcja_ibfk_1",
                 "fields": [
-                  "id_kategoria"
+                  "id_koszyk"
                 ],
                 "referenceSchema": "osiedlowy_sklep_spozywczy",
-                "referenceTable": "kategoria",
+                "referenceTable": "koszyk",
                 "referenceFields": [
-                  "id_kategoria"
+                  "id_koszyk"
                 ],
                 "onDelete": "RESTRICT",
                 "onUpdate": "RESTRICT",
                 "sourceCardinality": "ZeroOrManyRelationship",
                 "targetCardinality": "OneAndOnlyOneRelationship",
-                "oldName": "fk_daneProduktów_kategoria_1"
-              },
-              {
-                "objectType": "ForeignKey_MYSQL",
-                "name": "fk_daneProduktów_ceny_1",
-                "fields": [
-                  "id_ceny"
-                ],
-                "referenceSchema": "osiedlowy_sklep_spozywczy",
-                "referenceTable": "ceny",
-                "referenceFields": [
-                  "id_ceny"
-                ],
-                "onDelete": "RESTRICT",
-                "onUpdate": "RESTRICT",
-                "sourceCardinality": "ZeroOrManyRelationship",
-                "targetCardinality": "ZeroOrOneRelationship",
-                "oldName": "fk_daneProduktów_ceny_1"
+                "oldName": "trazakcja_ibfk_1"
               }
             ],
             "checks": [],
@@ -2404,12 +3498,12 @@
           },
           {
             "objectType": "Table_MYSQL",
-            "name": "wielosztuki",
+            "name": "wielo_sztuki",
             "comment": "",
             "engine": "InnoDB",
             "characterSet": "utf8mb4",
             "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 11,
+            "autoIncrement": 4,
             "tablespace": "",
             "storage": "",
             "insertMethod": "",
@@ -2431,18 +3525,18 @@
             "pageCheckSum": false,
             "transactional": false,
             "compression": "",
-            "oldName": "wielosztuki",
+            "oldName": "wielo_sztuki",
             "encryption": false,
             "createOptions": "",
-            "createTime": "2024-11-21 18:28:34",
+            "createTime": "2024-12-19 20:00:25",
             "checkTime": "",
             "dataFree": 0,
             "dataLength": 16384,
             "indexLength": 16384,
             "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `wielosztuki` (\n  `id_wielosztuki` int NOT NULL AUTO_INCREMENT,\n  `ilosc` text,\n  `cenaznizkaBrutto` float DEFAULT NULL,\n  `cenaznizkaNetto` float DEFAULT NULL,\n  `id_ceny` int NOT NULL,\n  PRIMARY KEY (`id_wielosztuki`),\n  KEY `fk_wielosztuki_ceny_1` (`id_ceny`),\n  CONSTRAINT `fk_wielosztuki_ceny_1` FOREIGN KEY (`id_ceny`) REFERENCES `ceny` (`id_ceny`)\n) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
+            "rows": 3,
+            "updateTime": "2024-12-19 20:00:27",
+            "DDL": "CREATE TABLE `wielo_sztuki` (\n  `id_wielo_sztuki` int NOT NULL AUTO_INCREMENT,\n  `ilosc` int DEFAULT NULL,\n  `cena_znizka_brutto` float DEFAULT NULL,\n  `cena_znizka_netto` float DEFAULT NULL,\n  `id_ceny` int NOT NULL,\n  PRIMARY KEY (`id_wielo_sztuki`),\n  KEY `wielo_sztuki_ibfk_1` (`id_ceny`),\n  CONSTRAINT `wielo_sztuki_ibfk_1` FOREIGN KEY (`id_ceny`) REFERENCES `ceny` (`id_ceny`) ON DELETE RESTRICT ON UPDATE RESTRICT\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
             "partitionBy": "",
             "partitionByExpr": "",
             "partitions": 0,
@@ -2454,7 +3548,7 @@
             "fields": [
               {
                 "objectType": "TableField_MYSQL",
-                "name": "id_wielosztuki",
+                "name": "id_wielo_sztuki",
                 "type": "int",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -2476,7 +3570,7 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "id_wielosztuki"
+                "oldName": "id_wielo_sztuki"
               },
               {
                 "objectType": "TableField_MYSQL",
@@ -2488,8 +3582,8 @@
                 "isZeroFill": false,
                 "setEnumValues": "",
                 "isBinary": false,
-                "charset": "utf8mb4",
-                "collation": "utf8mb4_0900_ai_ci",
+                "charset": "",
+                "collation": "",
                 "isNullable": true,
                 "defaultType": "Null",
                 "defaultValue": "",
@@ -2506,7 +3600,7 @@
               },
               {
                 "objectType": "TableField_MYSQL",
-                "name": "cenaznizkaBrutto",
+                "name": "cena_znizka_brutto",
                 "type": "float",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -2528,11 +3622,11 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "cenaznizkaBrutto"
+                "oldName": "cena_znizka_brutto"
               },
               {
                 "objectType": "TableField_MYSQL",
-                "name": "cenaznizkaNetto",
+                "name": "cena_znizka_netto",
                 "type": "float",
                 "length": -2147483648,
                 "decimals": -2147483648,
@@ -2554,7 +3648,7 @@
                 "isGeneratedAlways": false,
                 "virtualExpr": "",
                 "virtualType": "",
-                "oldName": "cenaznizkaNetto"
+                "oldName": "cena_znizka_netto"
               },
               {
                 "objectType": "TableField_MYSQL",
@@ -2586,18 +3680,18 @@
             "indexes": [
               {
                 "objectType": "Index_MYSQL",
-                "name": "fk_wielosztuki_ceny_1",
+                "name": "wielo_sztuki_ibfk_1",
                 "type": "NORMAL",
                 "method": "BTREE",
                 "comment": "",
-                "oldName": "fk_wielosztuki_ceny_1",
+                "oldName": "wielo_sztuki_ibfk_1",
                 "online": false,
                 "keyBlockSize": 0,
                 "parser": "",
                 "algorithm": "",
                 "lock": "",
                 "collation": "A",
-                "cardinality": "10",
+                "cardinality": "3",
                 "packed": "",
                 "IsVisibleIndex": true,
                 "fields": [
@@ -2617,10 +3711,10 @@
               "fields": [
                 {
                   "objectType": "IndexField_MYSQL",
-                  "name": "id_wielosztuki",
+                  "name": "id_wielo_sztuki",
                   "keyLength": 0,
                   "order": "",
-                  "oldName": "id_wielosztuki"
+                  "oldName": "id_wielo_sztuki"
                 }
               ],
               "oldName": "",
@@ -2630,7 +3724,7 @@
             "foreignKeys": [
               {
                 "objectType": "ForeignKey_MYSQL",
-                "name": "fk_wielosztuki_ceny_1",
+                "name": "wielo_sztuki_ibfk_1",
                 "fields": [
                   "id_ceny"
                 ],
@@ -2643,425 +3737,9 @@
                 "onUpdate": "RESTRICT",
                 "sourceCardinality": "ZeroOrManyRelationship",
                 "targetCardinality": "OneAndOnlyOneRelationship",
-                "oldName": "fk_wielosztuki_ceny_1"
+                "oldName": "wielo_sztuki_ibfk_1"
               }
             ],
-            "checks": [],
-            "triggers": [],
-            "tablePartitions": []
-          },
-          {
-            "objectType": "Table_MYSQL",
-            "name": "stanowisko",
-            "comment": "",
-            "engine": "InnoDB",
-            "characterSet": "utf8mb4",
-            "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 11,
-            "tablespace": "",
-            "storage": "",
-            "insertMethod": "",
-            "connection": "",
-            "checksum": false,
-            "rowFormat": "Dynamic",
-            "avgRowLength": 0,
-            "maxRows": 0,
-            "minRows": 0,
-            "keyBlockSize": 0,
-            "packKeys": "",
-            "delayKeyWrite": false,
-            "dataDirectory": "",
-            "indexDirectory": "",
-            "statsAutoRecalc": "",
-            "statsPersistent": "",
-            "statsSamplePages": 0,
-            "union": "",
-            "pageCheckSum": false,
-            "transactional": false,
-            "compression": "",
-            "oldName": "stanowisko",
-            "encryption": false,
-            "createOptions": "",
-            "createTime": "2024-11-21 18:28:34",
-            "checkTime": "",
-            "dataFree": 0,
-            "dataLength": 16384,
-            "indexLength": 32768,
-            "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `stanowisko` (\n  `id_stanowisko` int NOT NULL AUTO_INCREMENT,\n  `pozycja` text,\n  `id_pracownik` int DEFAULT NULL,\n  `id_wynagrodzenia` int DEFAULT NULL,\n  PRIMARY KEY (`id_stanowisko`),\n  KEY `fk_przedmiotWKoszyku_pracownicy_1` (`id_pracownik`),\n  KEY `fk_stanowisko_wynagrodzenie_1` (`id_wynagrodzenia`),\n  CONSTRAINT `fk_przedmiotWKoszyku_pracownicy_1` FOREIGN KEY (`id_pracownik`) REFERENCES `pracownicy` (`id_pracownik`),\n  CONSTRAINT `fk_stanowisko_wynagrodzenie_1` FOREIGN KEY (`id_wynagrodzenia`) REFERENCES `wynagrodzenie` (`id_wynagrodzenie`)\n) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
-            "partitionBy": "",
-            "partitionByExpr": "",
-            "partitions": 0,
-            "partitionKeyAlgorithm": "",
-            "subPartitionBy": "",
-            "subPartitionByExpr": "",
-            "subPartitions": 0,
-            "subPartitionKeyAlgorithm": "",
-            "fields": [
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "id_stanowisko",
-                "type": "int",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": true,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "id_stanowisko"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "pozycja",
-                "type": "text",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "utf8mb4",
-                "collation": "utf8mb4_0900_ai_ci",
-                "isNullable": true,
-                "defaultType": "Null",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "pozycja"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "id_pracownik",
-                "type": "int",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": true,
-                "defaultType": "Null",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "id_pracownik"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "id_wynagrodzenia",
-                "type": "int",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": true,
-                "defaultType": "Null",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "id_wynagrodzenia"
-              }
-            ],
-            "indexes": [
-              {
-                "objectType": "Index_MYSQL",
-                "name": "fk_przedmiotWKoszyku_pracownicy_1",
-                "type": "NORMAL",
-                "method": "BTREE",
-                "comment": "",
-                "oldName": "fk_przedmiotWKoszyku_pracownicy_1",
-                "online": false,
-                "keyBlockSize": 0,
-                "parser": "",
-                "algorithm": "",
-                "lock": "",
-                "collation": "A",
-                "cardinality": "10",
-                "packed": "",
-                "IsVisibleIndex": true,
-                "fields": [
-                  {
-                    "objectType": "IndexField_MYSQL",
-                    "name": "id_pracownik",
-                    "keyLength": 0,
-                    "order": "ASC",
-                    "oldName": "id_pracownik"
-                  }
-                ]
-              },
-              {
-                "objectType": "Index_MYSQL",
-                "name": "fk_stanowisko_wynagrodzenie_1",
-                "type": "NORMAL",
-                "method": "BTREE",
-                "comment": "",
-                "oldName": "fk_stanowisko_wynagrodzenie_1",
-                "online": false,
-                "keyBlockSize": 0,
-                "parser": "",
-                "algorithm": "",
-                "lock": "",
-                "collation": "A",
-                "cardinality": "10",
-                "packed": "",
-                "IsVisibleIndex": true,
-                "fields": [
-                  {
-                    "objectType": "IndexField_MYSQL",
-                    "name": "id_wynagrodzenia",
-                    "keyLength": 0,
-                    "order": "ASC",
-                    "oldName": "id_wynagrodzenia"
-                  }
-                ]
-              }
-            ],
-            "primaryKey": {
-              "objectType": "PrimaryKey_MYSQL",
-              "name": "",
-              "fields": [
-                {
-                  "objectType": "IndexField_MYSQL",
-                  "name": "id_stanowisko",
-                  "keyLength": 0,
-                  "order": "",
-                  "oldName": "id_stanowisko"
-                }
-              ],
-              "oldName": "",
-              "indexMethod": "BTREE",
-              "comment": ""
-            },
-            "foreignKeys": [
-              {
-                "objectType": "ForeignKey_MYSQL",
-                "name": "fk_przedmiotWKoszyku_pracownicy_1",
-                "fields": [
-                  "id_pracownik"
-                ],
-                "referenceSchema": "osiedlowy_sklep_spozywczy",
-                "referenceTable": "pracownik",
-                "referenceFields": [
-                  "id_pracownik"
-                ],
-                "onDelete": "",
-                "onUpdate": "",
-                "sourceCardinality": "ZeroOrManyRelationship",
-                "targetCardinality": "ZeroOrOneRelationship",
-                "oldName": "fk_przedmiotWKoszyku_pracownicy_1"
-              },
-              {
-                "objectType": "ForeignKey_MYSQL",
-                "name": "fk_stanowisko_wynagrodzenie_1",
-                "fields": [
-                  "id_wynagrodzenia"
-                ],
-                "referenceSchema": "osiedlowy_sklep_spozywczy",
-                "referenceTable": "wynagrodzenie",
-                "referenceFields": [
-                  "id_wynagrodzenie"
-                ],
-                "onDelete": "",
-                "onUpdate": "",
-                "sourceCardinality": "ZeroOrManyRelationship",
-                "targetCardinality": "ZeroOrOneRelationship",
-                "oldName": "fk_stanowisko_wynagrodzenie_1"
-              }
-            ],
-            "checks": [],
-            "triggers": [],
-            "tablePartitions": []
-          },
-          {
-            "objectType": "Table_MYSQL",
-            "name": "ceny",
-            "comment": "",
-            "engine": "InnoDB",
-            "characterSet": "utf8mb4",
-            "collation": "utf8mb4_0900_ai_ci",
-            "autoIncrement": 11,
-            "tablespace": "",
-            "storage": "",
-            "insertMethod": "",
-            "connection": "",
-            "checksum": false,
-            "rowFormat": "Dynamic",
-            "avgRowLength": 0,
-            "maxRows": 0,
-            "minRows": 0,
-            "keyBlockSize": 0,
-            "packKeys": "",
-            "delayKeyWrite": false,
-            "dataDirectory": "",
-            "indexDirectory": "",
-            "statsAutoRecalc": "",
-            "statsPersistent": "",
-            "statsSamplePages": 0,
-            "union": "",
-            "pageCheckSum": false,
-            "transactional": false,
-            "compression": "",
-            "oldName": "ceny",
-            "encryption": false,
-            "createOptions": "",
-            "createTime": "2024-11-21 18:28:33",
-            "checkTime": "",
-            "dataFree": 0,
-            "dataLength": 16384,
-            "indexLength": 0,
-            "maxDataLength": 0,
-            "rows": 10,
-            "updateTime": "2024-11-21 18:28:35",
-            "DDL": "CREATE TABLE `ceny` (\n  `id_ceny` int NOT NULL AUTO_INCREMENT,\n  `cenaBrutto` float DEFAULT NULL,\n  `cenaNetto` float DEFAULT NULL,\n  PRIMARY KEY (`id_ceny`)\n) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci",
-            "partitionBy": "",
-            "partitionByExpr": "",
-            "partitions": 0,
-            "partitionKeyAlgorithm": "",
-            "subPartitionBy": "",
-            "subPartitionByExpr": "",
-            "subPartitions": 0,
-            "subPartitionKeyAlgorithm": "",
-            "fields": [
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "id_ceny",
-                "type": "int",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": false,
-                "defaultType": "Others",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": true,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "id_ceny"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "cenaBrutto",
-                "type": "float",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": true,
-                "defaultType": "Null",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "cenaBrutto"
-              },
-              {
-                "objectType": "TableField_MYSQL",
-                "name": "cenaNetto",
-                "type": "float",
-                "length": -2147483648,
-                "decimals": -2147483648,
-                "isUnsigned": false,
-                "isZeroFill": false,
-                "setEnumValues": "",
-                "isBinary": false,
-                "charset": "",
-                "collation": "",
-                "isNullable": true,
-                "defaultType": "Null",
-                "defaultValue": "",
-                "isOnUpdateCurrentTimestamp": false,
-                "isAutoInc": false,
-                "comment": "",
-                "columnFormat": "",
-                "storage": "",
-                "isVirtual": false,
-                "isGeneratedAlways": false,
-                "virtualExpr": "",
-                "virtualType": "",
-                "oldName": "cenaNetto"
-              }
-            ],
-            "indexes": [],
-            "primaryKey": {
-              "objectType": "PrimaryKey_MYSQL",
-              "name": "",
-              "fields": [
-                {
-                  "objectType": "IndexField_MYSQL",
-                  "name": "id_ceny",
-                  "keyLength": 0,
-                  "order": "",
-                  "oldName": ""
-                }
-              ],
-              "oldName": "",
-              "indexMethod": "BTREE",
-              "comment": ""
-            },
-            "foreignKeys": [],
             "checks": [],
             "triggers": [],
             "tablePartitions": []
@@ -3074,7 +3752,7 @@
   "diagrams": [
     {
       "name": "Diagram 1",
-      "paperWidth": 1,
+      "paperWidth": 2,
       "paperHeight": 1,
       "tableFont": "Arial Unicode MS",
       "tableFontSize": 14,
@@ -3089,10 +3767,10 @@
           "type": "table",
           "schemaName": "osiedlowy_sklep_spozywczy",
           "tableName": "ceny",
-          "x": 690,
-          "y": 980,
-          "width": 150,
-          "height": 110,
+          "x": 470,
+          "y": 770,
+          "width": 153,
+          "height": 130,
           "isBold": false,
           "titleColor": {
             "r": 55,
@@ -3104,10 +3782,10 @@
         {
           "type": "table",
           "schemaName": "osiedlowy_sklep_spozywczy",
-          "tableName": "daneproduktów",
-          "x": 470,
-          "y": 960,
-          "width": 171,
+          "tableName": "ceny_historia",
+          "x": 270,
+          "y": 760,
+          "width": 152,
           "height": 150,
           "isBold": false,
           "titleColor": {
@@ -3120,11 +3798,11 @@
         {
           "type": "table",
           "schemaName": "osiedlowy_sklep_spozywczy",
-          "tableName": "dziennyutarg",
-          "x": 270,
-          "y": 250,
-          "width": 154,
-          "height": 110,
+          "tableName": "dane_produktow",
+          "x": 500,
+          "y": 350,
+          "width": 176,
+          "height": 170,
           "isBold": false,
           "titleColor": {
             "r": 55,
@@ -3137,9 +3815,9 @@
           "type": "table",
           "schemaName": "osiedlowy_sklep_spozywczy",
           "tableName": "kategoria",
-          "x": 270,
-          "y": 990,
-          "width": 158,
+          "x": 600,
+          "y": 630,
+          "width": 211,
           "height": 90,
           "isBold": false,
           "titleColor": {
@@ -3153,9 +3831,9 @@
           "type": "table",
           "schemaName": "osiedlowy_sklep_spozywczy",
           "tableName": "koszyk",
-          "x": 470,
-          "y": 450,
-          "width": 192,
+          "x": 710,
+          "y": 370,
+          "width": 176,
           "height": 110,
           "isBold": false,
           "titleColor": {
@@ -3168,10 +3846,42 @@
         {
           "type": "table",
           "schemaName": "osiedlowy_sklep_spozywczy",
+          "tableName": "kraj_producenta",
+          "x": 500,
+          "y": 30,
+          "width": 171,
+          "height": 90,
+          "isBold": false,
+          "titleColor": {
+            "r": 55,
+            "g": 131,
+            "b": 192,
+            "a": 1
+          }
+        },
+        {
+          "type": "table",
+          "schemaName": "osiedlowy_sklep_spozywczy",
+          "tableName": "login_historia",
+          "x": 930,
+          "y": 810,
+          "width": 170,
+          "height": 130,
+          "isBold": false,
+          "titleColor": {
+            "r": 55,
+            "g": 131,
+            "b": 192,
+            "a": 1
+          }
+        },
+        {
+          "type": "table",
+          "schemaName": "osiedlowy_sklep_spozywczy",
           "tableName": "magazyn",
-          "x": 230,
-          "y": 770,
-          "width": 196,
+          "x": 290,
+          "y": 550,
+          "width": 156,
           "height": 130,
           "isBold": false,
           "titleColor": {
@@ -3185,89 +3895,9 @@
           "type": "table",
           "schemaName": "osiedlowy_sklep_spozywczy",
           "tableName": "pracownik",
-          "x": 490,
-          "y": 10,
-          "width": 150,
-          "height": 160,
-          "isBold": false,
-          "titleColor": {
-            "r": 55,
-            "g": 131,
-            "b": 192,
-            "a": 1
-          }
-        },
-        {
-          "type": "table",
-          "schemaName": "osiedlowy_sklep_spozywczy",
-          "tableName": "premia",
-          "x": 690,
-          "y": 30,
-          "width": 150,
-          "height": 110,
-          "isBold": false,
-          "titleColor": {
-            "r": 55,
-            "g": 131,
-            "b": 192,
-            "a": 1
-          }
-        },
-        {
-          "type": "table",
-          "schemaName": "osiedlowy_sklep_spozywczy",
-          "tableName": "przedmiotwkoszyku",
-          "x": 470,
-          "y": 610,
-          "width": 192,
-          "height": 110,
-          "isBold": false,
-          "titleColor": {
-            "r": 55,
-            "g": 131,
-            "b": 192,
-            "a": 1
-          }
-        },
-        {
-          "type": "table",
-          "schemaName": "osiedlowy_sklep_spozywczy",
-          "tableName": "stanowisko",
-          "x": 270,
-          "y": 30,
-          "width": 167,
-          "height": 130,
-          "isBold": false,
-          "titleColor": {
-            "r": 55,
-            "g": 131,
-            "b": 192,
-            "a": 1
-          }
-        },
-        {
-          "type": "table",
-          "schemaName": "osiedlowy_sklep_spozywczy",
-          "tableName": "stanproduktów",
-          "x": 470,
-          "y": 770,
+          "x": 930,
+          "y": 570,
           "width": 171,
-          "height": 150,
-          "isBold": false,
-          "titleColor": {
-            "r": 55,
-            "g": 131,
-            "b": 192,
-            "a": 1
-          }
-        },
-        {
-          "type": "table",
-          "schemaName": "osiedlowy_sklep_spozywczy",
-          "tableName": "tranzakcja",
-          "x": 480,
-          "y": 210,
-          "width": 160,
           "height": 190,
           "isBold": false,
           "titleColor": {
@@ -3280,10 +3910,74 @@
         {
           "type": "table",
           "schemaName": "osiedlowy_sklep_spozywczy",
-          "tableName": "wielosztuki",
-          "x": 890,
-          "y": 960,
-          "width": 172,
+          "tableName": "pracownik_stanowisko",
+          "x": 1150,
+          "y": 610,
+          "width": 205,
+          "height": 110,
+          "isBold": false,
+          "titleColor": {
+            "r": 55,
+            "g": 131,
+            "b": 192,
+            "a": 1
+          }
+        },
+        {
+          "type": "table",
+          "schemaName": "osiedlowy_sklep_spozywczy",
+          "tableName": "producent",
+          "x": 500,
+          "y": 170,
+          "width": 171,
+          "height": 130,
+          "isBold": false,
+          "titleColor": {
+            "r": 55,
+            "g": 131,
+            "b": 192,
+            "a": 1
+          }
+        },
+        {
+          "type": "table",
+          "schemaName": "osiedlowy_sklep_spozywczy",
+          "tableName": "przedmiot_w_koszyku",
+          "x": 30,
+          "y": 370,
+          "width": 202,
+          "height": 110,
+          "isBold": false,
+          "titleColor": {
+            "r": 55,
+            "g": 131,
+            "b": 192,
+            "a": 1
+          }
+        },
+        {
+          "type": "table",
+          "schemaName": "osiedlowy_sklep_spozywczy",
+          "tableName": "rodzaj_tranzakcji",
+          "x": 930,
+          "y": 190,
+          "width": 174,
+          "height": 90,
+          "isBold": false,
+          "titleColor": {
+            "r": 55,
+            "g": 131,
+            "b": 192,
+            "a": 1
+          }
+        },
+        {
+          "type": "table",
+          "schemaName": "osiedlowy_sklep_spozywczy",
+          "tableName": "stan_produktow",
+          "x": 290,
+          "y": 350,
+          "width": 176,
           "height": 150,
           "isBold": false,
           "titleColor": {
@@ -3296,11 +3990,11 @@
         {
           "type": "table",
           "schemaName": "osiedlowy_sklep_spozywczy",
-          "tableName": "wynagrodzenie",
-          "x": 30,
-          "y": 30,
-          "width": 185,
-          "height": 130,
+          "tableName": "stanowisko",
+          "x": 1410,
+          "y": 630,
+          "width": 164,
+          "height": 90,
           "isBold": false,
           "titleColor": {
             "r": 55,
@@ -3310,18 +4004,34 @@
           }
         },
         {
-          "type": "view",
-          "schemaName": "default",
-          "viewName": "infopracownik",
-          "x": 740,
-          "y": 200,
-          "width": 200,
-          "height": 200,
+          "type": "table",
+          "schemaName": "osiedlowy_sklep_spozywczy",
+          "tableName": "transakcja",
+          "x": 930,
+          "y": 330,
+          "width": 173,
+          "height": 190,
           "isBold": false,
           "titleColor": {
-            "r": 100,
-            "g": 181,
-            "b": 246,
+            "r": 55,
+            "g": 131,
+            "b": 192,
+            "a": 1
+          }
+        },
+        {
+          "type": "table",
+          "schemaName": "osiedlowy_sklep_spozywczy",
+          "tableName": "wielo_sztuki",
+          "x": 670,
+          "y": 760,
+          "width": 183,
+          "height": 150,
+          "isBold": false,
+          "titleColor": {
+            "r": 55,
+            "g": 131,
+            "b": 192,
             "a": 1
           }
         }
@@ -3329,59 +4039,25 @@
       "layers": [],
       "relations": [
         {
-          "name": "fk_daneProduktów_ceny_1",
-          "sourceTableName": "daneproduktów",
+          "name": "ceny_historia_ibfk_1",
+          "sourceTableName": "ceny_historia",
           "sourceSchemaName": "osiedlowy_sklep_spozywczy",
           "lineWidth": 1,
           "visible": true,
           "vertices": [
             {
-              "x": 656,
-              "y": 1040
+              "x": 437,
+              "y": 840
             },
-            {
-              "x": 675,
-              "y": 1040
-            }
-          ],
-          "label": {
-            "x": 652,
-            "y": 1042,
-            "width": 183,
-            "height": 30,
-            "fontName": "Arial Unicode MS",
-            "fontSize": 14,
-            "fontColor": {
-              "r": 204,
-              "g": 204,
-              "b": 204,
-              "a": 1
-            },
-            "isFontBold": false,
-            "isFontItalic": false,
-            "isVisible": false
-          }
-        },
-        {
-          "name": "fk_daneProduktów_kategoria_1",
-          "sourceTableName": "daneproduktów",
-          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
-          "lineWidth": 1,
-          "visible": true,
-          "vertices": [
             {
               "x": 455,
-              "y": 1040
-            },
-            {
-              "x": 443,
-              "y": 1040
+              "y": 840
             }
           ],
           "label": {
-            "x": 471,
-            "y": 1042,
-            "width": 215,
+            "x": 433,
+            "y": 842,
+            "width": 140,
             "height": 30,
             "fontName": "Arial Unicode MS",
             "fontSize": 14,
@@ -3397,32 +4073,304 @@
           }
         },
         {
-          "name": "fk_premia_pracowicy_1",
-          "sourceTableName": "premia",
+          "name": "dane_produktow_ibfk_2",
+          "sourceTableName": "dane_produktow",
           "sourceSchemaName": "osiedlowy_sklep_spozywczy",
           "lineWidth": 1,
           "visible": true,
           "vertices": [
             {
-              "x": 675,
-              "y": 100
+              "x": 560,
+              "y": 535
             },
             {
-              "x": 655,
-              "y": 100
-            },
-            {
-              "x": 655,
-              "y": 80
-            },
-            {
-              "x": 655,
-              "y": 80
+              "x": 560,
+              "y": 755
             }
           ],
           "label": {
-            "x": 691,
-            "y": 102,
+            "x": 568,
+            "y": 525,
+            "width": 166,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 204,
+              "g": 204,
+              "b": 204,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "dane_produktow_ibfk_1",
+          "sourceTableName": "dane_produktow",
+          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 620,
+              "y": 535
+            },
+            {
+              "x": 620,
+              "y": 580
+            },
+            {
+              "x": 660,
+              "y": 580
+            },
+            {
+              "x": 660,
+              "y": 615
+            }
+          ],
+          "label": {
+            "x": 628,
+            "y": 525,
+            "width": 166,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 204,
+              "g": 204,
+              "b": 204,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "koszyk_ibfk_1",
+          "sourceTableName": "koszyk",
+          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 695,
+              "y": 440
+            },
+            {
+              "x": 691,
+              "y": 440
+            }
+          ],
+          "label": {
+            "x": 711,
+            "y": 442,
+            "width": 96,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 204,
+              "g": 204,
+              "b": 204,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "login_historia_ibfk_1",
+          "sourceTableName": "login_historia",
+          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 1020,
+              "y": 795
+            },
+            {
+              "x": 1020,
+              "y": 775
+            }
+          ],
+          "label": {
+            "x": 1028,
+            "y": 805,
+            "width": 144,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 204,
+              "g": 204,
+              "b": 204,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "pracownik_stanowisko_ibfk_1",
+          "sourceTableName": "pracownik_stanowisko",
+          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 1135,
+              "y": 680
+            },
+            {
+              "x": 1116,
+              "y": 680
+            }
+          ],
+          "label": {
+            "x": 1151,
+            "y": 682,
+            "width": 202,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 204,
+              "g": 204,
+              "b": 204,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "dane_produktow_ibfk_3",
+          "sourceTableName": "dane_produktow",
+          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 600,
+              "y": 335
+            },
+            {
+              "x": 600,
+              "y": 315
+            }
+          ],
+          "label": {
+            "x": 608,
+            "y": 345,
+            "width": 166,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 204,
+              "g": 204,
+              "b": 204,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "producent_ibfk_1",
+          "sourceTableName": "producent",
+          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 600,
+              "y": 155
+            },
+            {
+              "x": 600,
+              "y": 135
+            }
+          ],
+          "label": {
+            "x": 608,
+            "y": 150,
+            "width": 123,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 204,
+              "g": 204,
+              "b": 204,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "przedmiot_w_koszyku_ibfk_1",
+          "sourceTableName": "przedmiot_w_koszyku",
+          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 247,
+              "y": 440
+            },
+            {
+              "x": 275,
+              "y": 440
+            }
+          ],
+          "label": {
+            "x": 243,
+            "y": 442,
+            "width": 197,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 204,
+              "g": 204,
+              "b": 204,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "stan_produktow_ibfk_1",
+          "sourceTableName": "stan_produktow",
+          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 481,
+              "y": 440
+            },
+            {
+              "x": 485,
+              "y": 440
+            }
+          ],
+          "label": {
+            "x": 477,
+            "y": 442,
             "width": 160,
             "height": 30,
             "fontName": "Arial Unicode MS",
@@ -3439,25 +4387,25 @@
           }
         },
         {
-          "name": "fk_koszyk_przedmiotWKoszyku_1",
-          "sourceTableName": "koszyk",
+          "name": "stan_produktow_ibfk_2",
+          "sourceTableName": "stan_produktow",
           "sourceSchemaName": "osiedlowy_sklep_spozywczy",
           "lineWidth": 1,
           "visible": true,
           "vertices": [
             {
-              "x": 560,
-              "y": 575
+              "x": 380,
+              "y": 515
             },
             {
-              "x": 560,
-              "y": 595
+              "x": 380,
+              "y": 535
             }
           ],
           "label": {
-            "x": 568,
-            "y": 565,
-            "width": 226,
+            "x": 388,
+            "y": 505,
+            "width": 160,
             "height": 30,
             "fontName": "Arial Unicode MS",
             "fontSize": 14,
@@ -3473,33 +4421,25 @@
           }
         },
         {
-          "name": "fk_przedmiotWKoszyku_pracownicy_1",
-          "sourceTableName": "stanowisko",
+          "name": "pracownik_stanowisko_ibfk_2",
+          "sourceTableName": "pracownik_stanowisko",
           "sourceSchemaName": "osiedlowy_sklep_spozywczy",
           "lineWidth": 1,
           "visible": true,
           "vertices": [
             {
-              "x": 452,
-              "y": 100
+              "x": 1370,
+              "y": 680
             },
             {
-              "x": 463,
-              "y": 100
-            },
-            {
-              "x": 463,
-              "y": 80
-            },
-            {
-              "x": 475,
-              "y": 80
+              "x": 1395,
+              "y": 680
             }
           ],
           "label": {
-            "x": 448,
-            "y": 102,
-            "width": 259,
+            "x": 1366,
+            "y": 682,
+            "width": 202,
             "height": 30,
             "fontName": "Arial Unicode MS",
             "fontSize": 14,
@@ -3515,25 +4455,25 @@
           }
         },
         {
-          "name": "fk_przedmiotWKoszyku_stanProduktów_1",
-          "sourceTableName": "przedmiotwkoszyku",
+          "name": "transakcja_ibfk_1",
+          "sourceTableName": "transakcja",
           "sourceSchemaName": "osiedlowy_sklep_spozywczy",
           "lineWidth": 1,
           "visible": true,
           "vertices": [
             {
-              "x": 560,
-              "y": 735
+              "x": 1020,
+              "y": 535
             },
             {
-              "x": 560,
-              "y": 755
+              "x": 1020,
+              "y": 555
             }
           ],
           "label": {
-            "x": 568,
-            "y": 725,
-            "width": 283,
+            "x": 1028,
+            "y": 525,
+            "width": 120,
             "height": 30,
             "fontName": "Arial Unicode MS",
             "fontSize": 14,
@@ -3549,25 +4489,25 @@
           }
         },
         {
-          "name": "fk_stanProduktów_daneProduktów_1",
-          "sourceTableName": "stanproduktów",
+          "name": "tranzakcja_ibfk_1",
+          "sourceTableName": "transakcja",
           "sourceSchemaName": "osiedlowy_sklep_spozywczy",
           "lineWidth": 1,
           "visible": true,
           "vertices": [
             {
-              "x": 560,
-              "y": 935
+              "x": 1020,
+              "y": 315
             },
             {
-              "x": 560,
-              "y": 945
+              "x": 1020,
+              "y": 295
             }
           ],
           "label": {
-            "x": 568,
-            "y": 925,
-            "width": 252,
+            "x": 1028,
+            "y": 310,
+            "width": 121,
             "height": 30,
             "fontName": "Arial Unicode MS",
             "fontSize": 14,
@@ -3583,203 +4523,59 @@
           }
         },
         {
-          "name": "fk_stanProduktów_magazyn_1",
-          "sourceTableName": "stanproduktów",
+          "name": "trazakcja_ibfk_1",
+          "sourceTableName": "transakcja",
           "sourceSchemaName": "osiedlowy_sklep_spozywczy",
           "lineWidth": 1,
           "visible": true,
           "vertices": [
             {
-              "x": 455,
+              "x": 915,
+              "y": 440
+            },
+            {
+              "x": 901,
+              "y": 440
+            }
+          ],
+          "label": {
+            "x": 931,
+            "y": 442,
+            "width": 112,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 204,
+              "g": 204,
+              "b": 204,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "wielo_sztuki_ibfk_1",
+          "sourceTableName": "wielo_sztuki",
+          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 655,
               "y": 840
             },
             {
-              "x": 441,
+              "x": 638,
               "y": 840
             }
           ],
           "label": {
-            "x": 471,
+            "x": 671,
             "y": 842,
-            "width": 207,
-            "height": 30,
-            "fontName": "Arial Unicode MS",
-            "fontSize": 14,
-            "fontColor": {
-              "r": 204,
-              "g": 204,
-              "b": 204,
-              "a": 1
-            },
-            "isFontBold": false,
-            "isFontItalic": false,
-            "isVisible": false
-          }
-        },
-        {
-          "name": "fk_koszyk_tranzakcja_1",
-          "sourceTableName": "koszyk",
-          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
-          "lineWidth": 1,
-          "visible": true,
-          "vertices": [
-            {
-              "x": 560,
-              "y": 435
-            },
-            {
-              "x": 560,
-              "y": 415
-            }
-          ],
-          "label": {
-            "x": 568,
-            "y": 445,
-            "width": 157,
-            "height": 30,
-            "fontName": "Arial Unicode MS",
-            "fontSize": 14,
-            "fontColor": {
-              "r": 204,
-              "g": 204,
-              "b": 204,
-              "a": 1
-            },
-            "isFontBold": false,
-            "isFontItalic": false,
-            "isVisible": false
-          }
-        },
-        {
-          "name": "fk_tranzakcja_pracowincy_1",
-          "sourceTableName": "tranzakcja",
-          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
-          "lineWidth": 1,
-          "visible": true,
-          "vertices": [
-            {
-              "x": 560,
-              "y": 195
-            },
-            {
-              "x": 560,
-              "y": 195
-            },
-            {
-              "x": 560,
-              "y": 195
-            },
-            {
-              "x": 560,
-              "y": 185
-            }
-          ],
-          "label": {
-            "x": 568,
-            "y": 205,
-            "width": 190,
-            "height": 30,
-            "fontName": "Arial Unicode MS",
-            "fontSize": 14,
-            "fontColor": {
-              "r": 204,
-              "g": 204,
-              "b": 204,
-              "a": 1
-            },
-            "isFontBold": false,
-            "isFontItalic": false,
-            "isVisible": false
-          }
-        },
-        {
-          "name": "fk_tranzakcja_dziennyUtarg_1",
-          "sourceTableName": "tranzakcja",
-          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
-          "lineWidth": 1,
-          "visible": true,
-          "vertices": [
-            {
-              "x": 465,
-              "y": 300
-            },
-            {
-              "x": 439,
-              "y": 300
-            }
-          ],
-          "label": {
-            "x": 481,
-            "y": 302,
-            "width": 204,
-            "height": 30,
-            "fontName": "Arial Unicode MS",
-            "fontSize": 14,
-            "fontColor": {
-              "r": 204,
-              "g": 204,
-              "b": 204,
-              "a": 1
-            },
-            "isFontBold": false,
-            "isFontItalic": false,
-            "isVisible": false
-          }
-        },
-        {
-          "name": "fk_wielosztuki_ceny_1",
-          "sourceTableName": "wielosztuki",
-          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
-          "lineWidth": 1,
-          "visible": true,
-          "vertices": [
-            {
-              "x": 875,
-              "y": 1040
-            },
-            {
-              "x": 855,
-              "y": 1040
-            }
-          ],
-          "label": {
-            "x": 891,
-            "y": 1042,
-            "width": 151,
-            "height": 30,
-            "fontName": "Arial Unicode MS",
-            "fontSize": 14,
-            "fontColor": {
-              "r": 204,
-              "g": 204,
-              "b": 204,
-              "a": 1
-            },
-            "isFontBold": false,
-            "isFontItalic": false,
-            "isVisible": false
-          }
-        },
-        {
-          "name": "fk_stanowisko_wynagrodzenie_1",
-          "sourceTableName": "stanowisko",
-          "sourceSchemaName": "osiedlowy_sklep_spozywczy",
-          "lineWidth": 1,
-          "visible": true,
-          "vertices": [
-            {
-              "x": 255,
-              "y": 100
-            },
-            {
-              "x": 230,
-              "y": 100
-            }
-          ],
-          "label": {
-            "x": 271,
-            "y": 102,
-            "width": 223,
+            "width": 133,
             "height": 30,
             "fontName": "Arial Unicode MS",
             "fontSize": 14,
