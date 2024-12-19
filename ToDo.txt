@@ -1,4 +1,4 @@
-Atrybut login hasło do pracownik
+(Atrybut login hasło do pracownik
 Historia logowania
 Text -> Varchar optymalizacja
 Int -> float wypłata
@@ -9,4 +9,6 @@ Id dziennyutarg
 Ilość np kgramt
 Historia cen
 Producent dodaj
-Cena 1 do jeden
+Cena 1 do jeden)
+Wprowadzanie danych
+Widoki
