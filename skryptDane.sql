@@ -49,10 +49,6 @@ INSERT INTO `pracownik_stanowisko` (`id_pracownik`, `id_stanowisko`) VALUES
 (1, 1),
 (2, 2);
 
--- Insert data into koszyk
-INSERT INTO `koszyk` (`ilosc`, `id_dane_produktow`) VALUES
-(2, 1),
-(3, 2);
 
 -- Insert data into transakcja
 INSERT INTO `rodzaj_tranzakcji` (`nazwa`) VALUES
@@ -60,10 +56,14 @@ INSERT INTO `rodzaj_tranzakcji` (`nazwa`) VALUES
 ('gotówką');
 
 -- Insert data into transakcja
-INSERT INTO `transakcja` (`kwota`, `data`, `czy_finalizacja`, `id_rodzaj_transakcji`, `id_pracownik`, `id_koszyk`) VALUES
-(25.99, '2024-12-19 10:00:00', 1, 1, 1, 1),
-(10.49, '2024-12-19 11:00:00', 1, 2, 2, 2);
+INSERT INTO `transakcja` (`kwota`, `data`, `czy_finalizacja`, `id_rodzaj_transakcji`, `id_pracownik`) VALUES
+(25.99, '2024-12-19 10:00:00', 1, 1, 1),
+(10.49, '2024-12-19 11:00:00', 1, 2, 2);
 
+-- Insert data into koszyk
+INSERT INTO `koszyk` (`id_tranzakcja`, `id_dane_produktow`) VALUES
+(1, 1),
+(1, 2);
 
 -- Insert data into ceny_historia
 INSERT INTO `ceny_historia` (`id_ceny`, `data_zmiany`, `cena_brutto`, `cena_netto`) VALUES
@@ -76,11 +76,6 @@ INSERT INTO `stan_produktow` (`data_waznosci`, `ilosc`, `id_dane_produktow`, `id
 ('2024-12-31', 200, 1, 1),
 ('2024-12-20', 150, 2, 2),
 ('2024-12-25', 300, 3, 3);
-
--- Insert data into przedmiot_w_koszyku
-INSERT INTO `przedmiot_w_koszyku` (`ilosc`, `id_stan_produktow`) VALUES
-(2, 1),
-(3, 2);
 
 -- Insert data into login_historia
 INSERT INTO `login_historia` (`data`, `operacja`, `id_pracownik`) VALUES
