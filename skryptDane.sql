@@ -17,10 +17,10 @@ INSERT INTO `producent` (`nazwa`, `adres`, `id_kraj_producenta`) VALUES
 ('Firma C', 'Paryż', 3);
 
 -- Insert data into ceny
-INSERT INTO `ceny` (`czy_na_sztuki`, `cena_brutto`, `cena_netto`) VALUES
-(1, 5.99, 4.87),
-(0, 12.49, 10.12),
-(1, 2.29, 1.86);
+INSERT INTO `ceny` (`id_ceny`, `czy_na_sztuki`, `cena_brutto`, `cena_netto`) VALUES
+(1, 1, 5.99, 4.87),
+(2, 0, 12.49, 10.12),
+(3, 1, 2.29, 1.86);
 
 -- Insert data into dane_produktow
 INSERT INTO `dane_produktow` (`nazwa`, `vat`, `id_kategoria`, `id_ceny`, `id_producenta`) VALUES
@@ -57,13 +57,13 @@ INSERT INTO `rodzaj_tranzakcji` (`nazwa`) VALUES
 
 -- Insert data into transakcja
 INSERT INTO `transakcja` (`kwota`, `data`, `czy_finalizacja`, `id_rodzaj_transakcji`, `id_pracownik`) VALUES
-(25.99, '2024-12-19 10:00:00', 1, 1, 1),
-(10.49, '2024-12-19 11:00:00', 1, 2, 2);
+(25.99, '2024-12-19 10:00:00', 1, 1, 1, 0),
+(10.49, '2024-12-19 11:00:00', 1, 2, 2, 0);
 
 -- Insert data into koszyk
 INSERT INTO `koszyk` (`id_tranzakcja`, `id_dane_produktow`) VALUES
-(1, 1),
-(1, 2);
+(1, 1, 2),
+(1, 2, 3);
 
 -- Insert data into ceny_historia
 INSERT INTO `ceny_historia` (`id_ceny`, `data_zmiany`, `cena_brutto`, `cena_netto`) VALUES
