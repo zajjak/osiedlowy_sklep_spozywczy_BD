@@ -58,14 +58,39 @@ CREATE TABLE `kraj_producenta`  (
   PRIMARY KEY (`id_kraj_producenta`) USING BTREE
 );
 
-CREATE TABLE `login_historia`  (
-  `id_logowania` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE log_dostaw (
+    id_log INT NOT NULL,
+    id_stan_produktow INT NOT NULL,
+    data_dostawy DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ilosc_dodana INT NOT NULL,
+    nowa_data_waznosci DATE NOT NULL,
+    PRIMARY KEY (id_log, data_dostawy),
+    KEY (data_dostawy)
+)
+PARTITION BY RANGE (YEAR(data_dostawy)) (
+    PARTITION p0 VALUES LESS THAN (2023),
+    PARTITION p1 VALUES LESS THAN (2024),
+    PARTITION p2 VALUES LESS THAN (2025),
+    PARTITION p3 VALUES LESS THAN (2026),
+    PARTITION p4 VALUES LESS THAN MAXVALUE
+);
+
+
+CREATE TABLE `login_historia` (
+  `id_logowania` int NOT NULL,
   `data` datetime NOT NULL,
   `operacja` varchar(255) NOT NULL,
   `id_pracownik` int DEFAULT NULL,
-  PRIMARY KEY (`id_logowania`) USING BTREE,
-  INDEX `login_historia_ibfk_1`(`id_pracownik` ASC) USING BTREE
+  PRIMARY KEY (`id_logowania`, `data`)
+)
+PARTITION BY RANGE (YEAR(data)) (
+  PARTITION p0 VALUES LESS THAN (2021),
+  PARTITION p1 VALUES LESS THAN (2022),
+  PARTITION p2 VALUES LESS THAN (2023),
+  PARTITION p3 VALUES LESS THAN (2024),
+  PARTITION p4 VALUES LESS THAN MAXVALUE
 );
+
 
 CREATE TABLE `magazyn`  (
   `id_magazyn` int NOT NULL AUTO_INCREMENT,
@@ -147,7 +172,6 @@ ALTER TABLE `dane_produktow` ADD CONSTRAINT `dane_produktow_ibfk_2` FOREIGN KEY 
 ALTER TABLE `dane_produktow` ADD CONSTRAINT `dane_produktow_ibfk_3` FOREIGN KEY (`id_producenta`) REFERENCES `producent` (`id_producent`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `koszyk` ADD CONSTRAINT `koszyk_ibfk_1` FOREIGN KEY (`id_dane_produktow`) REFERENCES `dane_produktow` (`id_dane_produktow`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `koszyk` ADD CONSTRAINT `koszyk_ibfk_2` FOREIGN KEY (`id_transakcja`) REFERENCES `transakcja` (`id_transakcji`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `login_historia` ADD CONSTRAINT `login_historia_ibfk_1` FOREIGN KEY (`id_pracownik`) REFERENCES `pracownik` (`id_pracownik`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `pracownik_stanowisko` ADD CONSTRAINT `pracownik_stanowisko_ibfk_1` FOREIGN KEY (`id_pracownik`) REFERENCES `pracownik` (`id_pracownik`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `pracownik_stanowisko` ADD CONSTRAINT `pracownik_stanowisko_ibfk_2` FOREIGN KEY (`id_stanowisko`) REFERENCES `stanowisko` (`id_stanowisko`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `producent` ADD CONSTRAINT `producent_ibfk_1` FOREIGN KEY (`id_kraj_producenta`) REFERENCES `kraj_producenta` (`id_kraj_producenta`) ON DELETE RESTRICT ON UPDATE RESTRICT;
@@ -237,11 +261,11 @@ INSERT INTO `stan_produktow` (`data_waznosci`, `ilosc`, `id_dane_produktow`, `id
 ('2024-12-25', 300, 3, 3);
 
 -- Insert data into login_historia
-INSERT INTO `login_historia` (`data`, `operacja`, `id_pracownik`) VALUES
-('2024-12-19 08:30:00', 'Logowanie', 1),
-('2024-12-19 09:00:00', 'Logowanie', 2),
-('2024-12-19 10:15:00', 'Wylogowanie', 1),
-('2024-12-19 11:30:00', 'Logowanie', 1);
+INSERT INTO `login_historia` (`id_logowania`, `data`, `operacja`, `id_pracownik`) VALUES
+(1, '2024-12-19 08:30:00', 'Logowanie', 1),
+(2, '2024-12-19 09:00:00', 'Logowanie', 2),
+(3, '2024-12-19 10:15:00', 'Wylogowanie', 1),
+(4, '2024-12-19 11:30:00', 'Logowanie', 1);
 
 -- ===================================== Widoki ================================================
 CREATE VIEW widok_historia_logowania AS
@@ -465,3 +489,65 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER aktualizuj_stan_produktow_po_finalizacji
+AFTER UPDATE ON transakcja
+FOR EACH ROW
+BEGIN
+    -- Sprawdzamy, czy transakcja została oznaczona jako sfinalizowana
+    IF NEW.czy_finalizacja = 1 AND OLD.czy_finalizacja = 0 THEN
+        -- Aktualizujemy stan produktów na podstawie koszyka powiązanego z transakcją
+        UPDATE stan_produktow sp
+        JOIN koszyk k ON sp.id_dane_produktow = k.id_dane_produktow
+        SET sp.ilosc = sp.ilosc - k.ilosc
+        WHERE k.id_transakcja = NEW.id_transakcji;
+    END IF;
+END;
+//
+
+DELIMITER ;
+
+
+
+-- =============================== EVENT ========================================
+
+DELIMITER //
+
+CREATE EVENT WarunkowaDostawa
+ON SCHEDULE EVERY 1 DAY -- Uruchamia się codziennie
+DO
+BEGIN
+    DECLARE max_id INT;
+
+    -- 1. Pobranie maksymalnego id_log z tabeli log_dostaw
+    SELECT IFNULL(MAX(id_log), 0) INTO max_id FROM log_dostaw;
+
+    -- 2. Aktualizacja brakujących produktów (ilość i data ważności)
+    UPDATE stan_produktow
+    SET ilosc = ilosc + 10,
+        data_waznosci = DATE_ADD(CURDATE(), INTERVAL 30 DAY)
+    WHERE ilosc = 0;
+
+    -- 3. Zapis logów dostaw do partycjonowanej tabeli log_dostaw
+    INSERT INTO log_dostaw (id_log, id_stan_produktow, ilosc_dodana, nowa_data_waznosci)
+    SELECT 
+        (@current_id := max_id + ROW_NUMBER() OVER ()) AS id_log, -- Generowanie id_log
+        sp.id_stan_produktow,
+        10,
+        DATE_ADD(CURDATE(), INTERVAL 30 DAY)
+    FROM stan_produktow sp
+    WHERE sp.ilosc = 0;
+
+    -- 4. Aktualizacja zapełnienia magazynów
+    UPDATE magazyn m
+    SET zapelnienie = (
+        SELECT SUM(sp.ilosc)
+        FROM stan_produktow sp
+        WHERE sp.id_magazyn = m.id_magazyn
+    );
+END //
+
+DELIMITER ;
+
